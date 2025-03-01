@@ -1,3 +1,6 @@
+# um
 node_modules/
 .vscode/
+
+# vsc workspace
 SonicR Rewrite.code-workspace
