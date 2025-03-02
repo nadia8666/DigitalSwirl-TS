@@ -1,11 +1,6 @@
 # main files
 node_modules/
 .vscode/
-out/*
 out/
-out/server/
-out/server/main.server.luau
-out/server
-
 # vsc workspace
 SonicR Rewrite.code-workspace
