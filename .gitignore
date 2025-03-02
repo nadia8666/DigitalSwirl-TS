@@ -1,6 +1,7 @@
 # main files
 node_modules/
 .vscode/
+out/
 
 # vsc workspace
 SonicR Rewrite.code-workspace
