@@ -1,4 +1,4 @@
-import { Player } from "shared/player"
+import { Player } from "shared/player/main"
 
 const LocalPlayer = game.GetService("Players").LocalPlayer
 let PlayerObject:Player | undefined = undefined
@@ -17,6 +17,8 @@ if (LocalPlayer.Character) {
 
 LocalPlayer.CharacterAdded.Connect(CharacterAdded)
 
-game.GetService("RunService").BindToRenderStep("ControlScript_Update", Enum.RenderPriority.Input.Value - 1, function(DeltaTime:number) {
-    
+game.GetService("RunService").BindToRenderStep("ControlScript_Update", Enum.RenderPriority.Input.Value - 1, (DeltaTime:number) => {
+    if (PlayerObject) {
+        PlayerObject.Update()
+    }
 })
