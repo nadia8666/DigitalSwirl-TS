@@ -1,4 +1,4 @@
-import { Player } from "shared/player/main"
+import { Player } from "shared/player"
 
 const LocalPlayer = game.GetService("Players").LocalPlayer
 let PlayerObject:Player | undefined = undefined
