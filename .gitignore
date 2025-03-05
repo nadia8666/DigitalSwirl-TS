@@ -4,3 +4,6 @@ node_modules/
 out/
 # vsc workspace
 SonicR Rewrite.code-workspace
+#rbxl
+main.rbxl
+main.rbxl.*

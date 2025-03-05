@@ -1,7 +1,7 @@
 import Net, { Route } from "@rbxts/yetanothernet"
 import * as Routes from "shared/common/replication/routes"
 
-const ReplicationRemote:Route<Routes.UpdatePacket> = Routes.UpdateRoute
+const ReplicationRemote:Route<Routes.UpdateRoute> = Routes.UpdateRoute
 
 game.GetService("RunService").Heartbeat.Connect(() => {
     for (const [Index, Sender, Packet] of ReplicationRemote.query()) {
