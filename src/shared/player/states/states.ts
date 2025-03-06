@@ -1,11 +1,11 @@
 import { StateAirborne } from "./airborne";
 import { StateGrounded } from "./grounded";
-import { StateNone } from "./none";
+import { StateBase } from "./base";
 
-export type PlayerState = StateNone
+export type PlayerState = StateBase
 
 export class StateList {
-    private "Base" = new StateNone
-    public "Airborne" = new StateAirborne
+    private Base = new StateBase
+    public Airborne = new StateAirborne
     public Grounded = new StateGrounded
 }

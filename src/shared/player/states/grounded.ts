@@ -1,20 +1,14 @@
 import { Player } from "..";
-import { StateNone } from "./none";
+import { StateBase } from "./base";
 
-export class StateGrounded extends StateNone {
+export class StateGrounded extends StateBase {
     constructor() {
         super()
     }
 
-    public CheckInput() {
-
-
-        return undefined
+    protected CheckInput() {
     }
 
-    public Update() {
-
-
-        return undefined
+    protected AfterUpdateHook() {
     }
 }

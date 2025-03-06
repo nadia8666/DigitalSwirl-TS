@@ -17,9 +17,9 @@ for (const [Key, State] of pairs(new StateList)) {
 
 export class StateMachine {
     private Player: Player
-    private NextTick:number
-    public List:StatesList
-    public Current:PlayerState
+    private NextTick: number
+    public List: StatesList
+    public Current: PlayerState
 
     constructor(Player:Player) {
         this.List = new Map()
@@ -55,6 +55,10 @@ export class StateMachine {
         }
     };
 
+    /*
+        Hello
+        @param Index how do you function doc again
+    */
     public Get(Index: StatesUnion):PlayerState {
         const Pick = this.List.get(Index)
 
