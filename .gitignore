@@ -2,6 +2,7 @@
 node_modules/
 .vscode/
 out/
+include/
 # vsc workspace
 SonicR Rewrite.code-workspace
 #rbxl
