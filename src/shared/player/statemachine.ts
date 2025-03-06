@@ -1,40 +1,49 @@
 import { Constants } from "shared/common/constants"
 import { Player } from "."
 
-import { StateNone } from "./states/none";
-import { StateGrounded } from "./states/grounded";
-import { StateAirborne } from "./states/airborne";
 import { AddLog } from "shared/common/logger";
+import { PlayerState, StateList } from "./states/states";
 
-export type States = "Grounded"|"Airborne"
-export type StateMap = Map<States, StateNone>
-export type PlayerState = StateNone
+export type StatesUnion = ExtractKeys<StateList, PlayerState>
+export type StatesList = Map<StatesUnion, PlayerState>
+
+const MainMap = new Map<StatesUnion, PlayerState>
+for (const [Key, State] of pairs(new StateList)) {
+    const Index = identity<StatesUnion>(Key)
+    const StateDeclared:_<PlayerState> = State
+
+    MainMap.set(Index, State)
+}
 
 export class StateMachine {
     private Player: Player
     private NextTick:number
-    public List:StateMap
+    public List:StatesList
+    public Current:PlayerState
 
     constructor(Player:Player) {
         this.List = new Map()
-        this.List.set("Airborne", new StateAirborne(Player))
-        this.List.set("Grounded", new StateGrounded(Player))
+
+        MainMap.forEach((Value, Index) => {
+            this.List.set(Index, Value)
+        })
 
         this.NextTick = os.clock()
         this.Player = Player
+        this.Current = this.Get("Airborne")
     };
 
     private TickState() {
-        const PreviousState = this.Player.State
-        let CurrentState = this.Player.State
+        let CurrentState = this.Current
 
-        CurrentState.CheckInput()
+        CurrentState.CheckMoves(this.Player)
 
-        if (PreviousState !== this.Player.State) {
-            CurrentState = this.Player.State
+        // Handle state changes from CheckMoves
+        if (CurrentState !== this.Current) {
+            CurrentState = this.Current
         }
 
-        CurrentState.Update()
+        CurrentState.Tick(this.Player)
     };
 
     public Update() {
@@ -46,7 +55,7 @@ export class StateMachine {
         }
     };
 
-    public Get(Index: States):StateNone {
+    public Get(Index: StatesUnion):PlayerState {
         const Pick = this.List.get(Index)
 
         if (Pick !== undefined) {

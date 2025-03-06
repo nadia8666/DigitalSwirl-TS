@@ -1,11 +1,9 @@
 import { Player } from "..";
 import { StateNone } from "./none";
 
-export class StateAirborne implements StateNone {
-    private Player
-
-    constructor(Player:Player) {
-        this.Player = Player
+export class StateAirborne extends StateNone {
+    constructor() {
+        super()
     }
 
     public CheckInput() {
@@ -18,9 +16,5 @@ export class StateAirborne implements StateNone {
 
 
         return undefined
-    }
-
-    public GetPlayer() {
-        return this.Player
     }
 }

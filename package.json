@@ -24,6 +24,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@rbxts/t": "^3.2.1",
     "@rbxts/yetanothernet": "^0.10.0-alpha.3"
   }
 }

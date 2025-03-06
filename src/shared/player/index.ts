@@ -1,17 +1,16 @@
-import { StateMachine, PlayerState } from "./statemachine"
+import { StateMachine } from "./statemachine"
+import { PlayerState } from "./states/states"
 
 export class Player {
-    public readonly States: StateMachine
+    public readonly State: StateMachine
     public Position: Vector3
     public Angle: CFrame
-    public State: PlayerState
 
     constructor(Character: Model) {
         this.Position = Character.GetPivot().Position
         this.Angle = Character.GetPivot().Rotation
-        this.States = new StateMachine(this)
-        this.State = this.States.Get("Grounded")
-
+        this.State = new StateMachine(this)
+        
         print(`Loaded new player ${Character}`)
     }
 
@@ -22,6 +21,6 @@ export class Player {
     public Update() {
         
         // Update state machine
-        this.States.Update()
+        this.State.Update()
     }
 }

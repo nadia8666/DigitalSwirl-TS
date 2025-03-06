@@ -1,4 +1,5 @@
 import { Route } from "@rbxts/yetanothernet"
+import { t } from "@rbxts/t"
 
 // UPDATE
 export type UpdateData = {
@@ -32,4 +33,4 @@ export const ConnectDisconnectRoute:Route<ConnectDisconnectRoute> = new Route({
     Event: undefined,
 })
 
-//TODO: add incoming middleware to all packets
+//TODO: add incoming middleware to all packets via t
