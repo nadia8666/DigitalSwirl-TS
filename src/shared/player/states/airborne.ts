@@ -1,20 +1,15 @@
 import { Player } from "..";
-import { StateNone } from "./none";
+import { StateBase } from "./base";
 
-export class StateAirborne extends StateNone {
+export class StateAirborne extends StateBase {
     constructor() {
         super()
     }
 
-    public CheckInput() {
-
-
-        return undefined
+    protected CheckInput() {
     }
 
-    public Update() {
-
-
-        return undefined
+    protected AfterUpdateHook(Player:Player) {
+        Player.Position = Player.Position.add(new Vector3(0, .1, 0))
     }
 }

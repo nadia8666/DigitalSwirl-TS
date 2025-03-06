@@ -1,7 +1,7 @@
 import { Player } from "..";
 
 // State base type
-export class StateNone {
+export class StateBase {
     constructor() {
        
     }
@@ -14,21 +14,21 @@ export class StateNone {
     }
 
     public Tick(Player:Player) {
+        // Pre update
+        if (this.BeforeUpdateHook(Player) !== undefined) { return }
+
         // Tick global code in every state
 
-        // Per state tick
-        this.Update(Player)
+        // Post update
+        this.AfterUpdateHook(Player)
     }
 
     protected CheckInput(Player:Player) {
-
-
-        return undefined
     }
 
-    protected Update(Player:Player) {
+    protected BeforeUpdateHook(Player:Player) {
+    }
 
-
-        return undefined
+    protected AfterUpdateHook(Player:Player) {
     }
 }
