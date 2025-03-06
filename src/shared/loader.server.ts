@@ -11,11 +11,16 @@ function CharacterAdded() {
     PlayerObject = new Player(Character)
 }
 
+function CharacterRemoving() {
+
+}
+
 if (LocalPlayer.Character) {
     CharacterAdded()
 }
 
 LocalPlayer.CharacterAdded.Connect(CharacterAdded)
+LocalPlayer.CharacterRemoving.Connect(CharacterRemoving)
 
 game.GetService("RunService").BindToRenderStep("ControlScript_Update", Enum.RenderPriority.Input.Value - 1, (DeltaTime:number) => {
     if (PlayerObject) {
