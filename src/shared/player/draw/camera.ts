@@ -9,12 +9,14 @@ export class Camera {
     public InputChanged:RBXScriptConnection
     public Zoom:number
     public Rotation:{X:number,Y:number,Z:number}
+    public InputVector:Vector3
 
     constructor(Player:Player) {
         Render.RegisterStepped("Camera", Enum.RenderPriority.Camera.Value + 1, (Delta:number) => this.Update(Delta))
         this.Rotation = {X: 0, Y: 0, Z: 0}
         this.Zoom = 16
         this.Player = Player
+        this.InputVector = Vector3.xAxis
 
         this.InputChanged = game.GetService("UserInputService").InputChanged.Connect((Input, Processed) => {
             if (Processed) { return }
@@ -62,6 +64,7 @@ export class Camera {
         const FinalCFrame = new CFrame(this.Player.Position).mul(Rotation).add(new Vector3(0, this.Player.Character.FindFirstChildOfClass("Humanoid")?.HipHeight, 0)).add(Rotation.LookVector.mul(-this.Zoom))
 
         game.Workspace.CurrentCamera.CFrame = FinalCFrame
+        this.InputVector = FinalCFrame.LookVector
     }
 
     public Destroy() {

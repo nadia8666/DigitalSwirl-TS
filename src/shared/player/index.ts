@@ -3,6 +3,7 @@ import { Camera } from "./draw/camera"
 import { Renderer } from "./draw/renderer"
 import { StateMachine } from "./statemachine"
 import * as Render from "shared/common/renderregistry"
+import { Input } from "./control/input"
 
 export class Player {
     public readonly State: StateMachine
@@ -11,6 +12,7 @@ export class Player {
     public Camera: Camera
     public Renderer: Renderer
     public Character: Model
+    public Input: Input
 
     constructor(Character: Model) {
         this.Character = Character
@@ -19,6 +21,7 @@ export class Player {
         this.State = new StateMachine(this)
         this.Camera = new Camera(this)
         this.Renderer = new Renderer(this)
+        this.Input = new Input()
 
         Render.RegisterStepped("Player", Enum.RenderPriority.Input.Value + 1, () => this.Update())
 

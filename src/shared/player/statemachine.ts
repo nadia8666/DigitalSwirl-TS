@@ -10,7 +10,6 @@ export type StatesList = Map<StatesUnion, PlayerState>
 const MainMap = new Map<StatesUnion, PlayerState>
 for (const [Key, State] of pairs(new StateList)) {
     const Index = identity<StatesUnion>(Key)
-    const StateDeclared:_<PlayerState> = State
 
     MainMap.set(Index, State)
 }
@@ -34,16 +33,9 @@ export class StateMachine {
     };
 
     private TickState() {
-        let CurrentState = this.Current
+        this.Current.CheckMoves(this.Player)
 
-        CurrentState.CheckMoves(this.Player)
-
-        // Handle state changes from CheckMoves
-        if (CurrentState !== this.Current) {
-            CurrentState = this.Current
-        }
-
-        CurrentState.Tick(this.Player)
+        this.Current.Tick(this.Player)
     };
 
     public Update() {
