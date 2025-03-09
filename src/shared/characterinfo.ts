@@ -6,5 +6,6 @@ export const CharacterInfo = {
         Scale: .455,
         Radius: 3,
         PositionError: 2,
+        Weight: 0.08,
     }
 }
