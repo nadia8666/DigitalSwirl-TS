@@ -141,13 +141,13 @@ function WallCollide(Player:Player, Whitelist:Instance[], Y:number, Direction:Ve
 }
 
 export function RunCollision(Player:Player) {
-    print(FrameworkState.SpeedMultiplier)
+    const SpeedMultiplier = FrameworkState.SpeedMultiplier
 
     //Remember previous state
 	const PreviousSpeed = Player.ToGlobal(Player.Speed)
 	
 	//Get collision whitelist
-	const CollisionWhitelist = [game.Workspace, CollisionReference.Get()]
+	const CollisionWhitelist = [CollisionReference.Get()]
 	
 	//Stick to moving floors
     if (Player.Flags.Grounded && Player.Flags.Floor && Player.Flags.FloorLast && Player.Flags.FloorOffset) {
@@ -178,19 +178,19 @@ export function RunCollision(Player:Player) {
             let XMove = true
             let ZMove = true
             for (const [i,v] of pairs(Heights)) {
-                if( WallCollide(Player, CollisionWhitelist, v, Player.Angle.LookVector, Player.Speed.X, (Player.Flags.Grounded || (Player.Speed.Y <= 0)) && (i === 1), false) === false) {
+                if( WallCollide(Player, CollisionWhitelist, v, Player.Angle.LookVector, Player.Speed.X * SpeedMultiplier, (Player.Flags.Grounded || (Player.Speed.Y <= 0)) && (i === 1), false) === false) {
                     XMove = false
                 }
-                if (WallCollide(Player, CollisionWhitelist, v, Player.Angle.RightVector, Player.Speed.Z, false, false) === false) {
+                if (WallCollide(Player, CollisionWhitelist, v, Player.Angle.RightVector, Player.Speed.Z * SpeedMultiplier, false, false) === false) {
                     ZMove = false
                 }
             }
 
             if (XMove) {
-                Player.Position = Player.Position.add(Player.Angle.LookVector.mul(Player.Speed.X * Player.Physics.Scale))
+                Player.Position = Player.Position.add(Player.Angle.LookVector.mul(Player.Speed.X * SpeedMultiplier * Player.Physics.Scale))
             }
             if (ZMove) {
-                Player.Position = Player.Position.add(Player.Angle.RightVector.mul(Player.Speed.Z * Player.Physics.Scale))
+                Player.Position = Player.Position.add(Player.Angle.RightVector.mul(Player.Speed.Z * SpeedMultiplier * Player.Physics.Scale))
             }
         }
 
@@ -200,9 +200,9 @@ export function RunCollision(Player:Player) {
             let CeilDown = CeilUp
             
             if (Player.Speed.Y > 0) {
-                CeilDown += Player.Speed.Y * Player.Physics.Scale //Moving upwards, extend raycast upwards
+                CeilDown += Player.Speed.Y * SpeedMultiplier * Player.Physics.Scale //Moving upwards, extend raycast upwards
             } else if (Player.Speed.Y < 0) {
-                CeilUp += Player.Speed.Y * Player.Physics.Scale //Moving downwards, move raycast downwards
+                CeilUp += Player.Speed.Y * SpeedMultiplier * Player.Physics.Scale //Moving downwards, move raycast downwards
             }
             
             const From = Player.Position.add(Player.Angle.UpVector.mul(CeilUp))
@@ -232,7 +232,7 @@ export function RunCollision(Player:Player) {
             let FloorDown = -(FloorUp + PositionError)
             
             if (Player.Speed.Y < 0) {
-                FloorDown += Player.Speed.Y * Player.Physics.Scale //Moving downwards, extend raycast downwards
+                FloorDown += Player.Speed.Y * SpeedMultiplier * Player.Physics.Scale //Moving downwards, extend raycast downwards
             } else if (Player.Speed.Y > 0) {
                 FloorUp += Player.Speed.Y * Player.Physics.Scale //Moving upwards, move raycast upwards
             }
@@ -304,7 +304,7 @@ export function RunCollision(Player:Player) {
                 Player.Speed = Player.Speed.mul(new Vector3(1, 0, 1))
             } else {
                 //Move vertically and unground
-                Player.Position = Player.Position.add(Player.Angle.UpVector.mul(Player.Speed.Y * Player.Physics.Scale))
+                Player.Position = Player.Position.add(Player.Angle.UpVector.mul(Player.Speed.Y * SpeedMultiplier * Player.Physics.Scale))
                 Player.Flags.Grounded = false
                 Player.Flags.Floor = undefined
             }
