@@ -22,7 +22,7 @@ export class Camera {
             if (Processed) { return }
 
             if (Input.UserInputType === Enum.UserInputType.MouseWheel) {
-                this.Zoom -= Input.Position.Z * 4
+                this.Zoom = math.clamp(this.Zoom - (Input.Position.Z * 4), game.GetService("Players").LocalPlayer.CameraMinZoomDistance, game.GetService("Players").LocalPlayer.CameraMaxZoomDistance)
             }
         })
     }

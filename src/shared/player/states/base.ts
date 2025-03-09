@@ -1,10 +1,9 @@
 import { Player } from "..";
+import { RunCollision } from "../physics/collision";
 
 // State base type
 export class StateBase {
-    constructor() {
-       
-    }
+    constructor() {}
 
     public CheckMoves(Player:Player) {
         Player.Input.Update()
@@ -20,6 +19,7 @@ export class StateBase {
         if (this.BeforeUpdateHook(Player) !== undefined) { return }
 
         // Tick global code in every state
+        RunCollision(Player)
 
         // Post update
         this.AfterUpdateHook(Player)
