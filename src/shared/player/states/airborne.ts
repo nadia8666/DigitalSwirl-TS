@@ -1,4 +1,5 @@
 import { Player } from "..";
+import { PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
 export class StateAirborne extends StateBase {
@@ -10,7 +11,6 @@ export class StateAirborne extends StateBase {
     }
 
     protected AfterUpdateHook(Player:Player) {
-        //Player.Position = Player.Position.add(new Vector3(0, .1, 0))
-        Player.Speed = new Vector3(15, -.5, 0)
+        PhysicsHandler.ApplyGravity(Player)
     }
 }
