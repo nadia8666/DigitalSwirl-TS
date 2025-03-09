@@ -1,16 +1,19 @@
+import { FrameworkState } from "shared/common/frameworkstate";
 import { Player } from "..";
+import * as VUtil from "shared/common/VUtil";
+import * as CFUtil from "shared/common/CFUtil";
 
 export const PhysicsHandler = {
     // Acceleration
     AccelerateGrounded: (Player:Player) => {
+        const SpeedMultiplier = FrameworkState.SpeedMultiplier
         //TEMPORARY
         let Decel = .2
         let Acceleration = Player.Input.Stick.Magnitude > 0 && .1 || math.clamp(-Decel - ((Player.Speed.X) -Decel), -Decel, 0)
+        Acceleration *= SpeedMultiplier
 
         Player.Speed = Player.Speed.add(new Vector3(Acceleration, 0, 0))
         Player.Speed = Player.Speed.mul(new Vector3(1, 1, .25))
-
-        print(Player.Speed)
     },
     AccelerateAirborne: (Player:Player) => {
 
@@ -18,6 +21,8 @@ export const PhysicsHandler = {
 
     // Gravity
     ApplyGravity: (Player:Player) => {
+        const SpeedMultiplier = FrameworkState.SpeedMultiplier
+
         Player.Speed
         //Gravity
         const weight = Player.Physics.Weight // TODO: water weight
@@ -38,11 +43,35 @@ export const PhysicsHandler = {
         //Acceleration = vector.AddZ(Acceleration, self.spd.Z * self.p.air_resist_z)
         
         //Apply acceleration
-        Player.Speed = Player.Speed.add(Acceleration)
+        Player.Speed = Player.Speed.add(Acceleration.mul(SpeedMultiplier))
     },
 
     // Movement
     // TOOD: port https://github.com/SonicOnset/DigitalSwirl-Client/blob/master/ControlScript/Player/Movement.lua
+    
+    AlignToGravity: (Player:Player) => {
+        if (/*self.spd.magnitude < self.p.dash_speed*/ true /*TODO: this*/) {
+            //Remember previous speed
+            const prev_spd = Player.ToGlobal(Player.Speed)
+            
+            //Get next angle
+            const from = Player.Angle.UpVector
+            const to = Player.Flags.Gravity.Unit.mul(-1)
+            const turn = VUtil.Angle(from, to)
+            
+            if (turn !== 0) {
+                const max_turn = math.rad(11.25)
+                const lim_turn = math.clamp(turn, -max_turn, max_turn)
+                
+                const next_ang = CFUtil.FromToRotation(from, to).mul(Player.Angle)
+                
+                Player.Angle = (Player.Angle.Lerp(next_ang, lim_turn / turn))
+            }
+            
+            //Keep using previous speed
+            Player.Speed = Player.ToLocal(prev_spd)
+        }
+    },
     
     // Turning
     TurnRaw: (Player:Player, Turn:number) => {
@@ -50,6 +79,8 @@ export const PhysicsHandler = {
     },
 
     TurnDefault: (Player:Player, Turn:number) => {
+        const SpeedMultiplier = FrameworkState.SpeedMultiplier
+
         let MaxTurn = math.abs(Turn)
 	
         if (MaxTurn <= math.rad(45)) {
@@ -63,6 +94,6 @@ export const PhysicsHandler = {
         }
         
         //Turn
-        PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn))
+        PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn) * SpeedMultiplier)
     }
 }

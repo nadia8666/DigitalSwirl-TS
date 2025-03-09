@@ -12,8 +12,7 @@ export class Renderer {
         if (!Root || !Root.IsA("BasePart")) { return }
 
         let Position = this.Player.Position
-        Position = Position.add(new Vector3(0, this.Player.Character.FindFirstChildOfClass("Humanoid")?.HipHeight, 0))
-        Position = Position.add(new Vector3(0, Root.Size.Y/2))
+        Position = Position.add(this.Player.Angle.UpVector.mul((Root.Size.Y/2) + (this.Player.Character.FindFirstChildOfClass("Humanoid")?.HipHeight || 0)))
 
         this.Player.Character.PivotTo(this.Player.Angle.add(Position))
     }
