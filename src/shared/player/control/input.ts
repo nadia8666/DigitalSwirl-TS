@@ -1,5 +1,5 @@
 import { Player } from "..";
-import { ButtonState } from "./ButtonState";
+import { ButtonState } from "./buttonstate";
 
 export class Input {
     public Button
