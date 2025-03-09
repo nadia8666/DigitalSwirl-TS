@@ -322,6 +322,7 @@ export function RunCollision(Player:Player) {
                 const Normal = Result[2]
                 if (Hit && Position && Normal) {
                     //Clip us out
+                    print("clip")
                     Player.Position = Player.Position.add((Position.sub(NewAdd)).sub(NewMiddle))
                     Player.Speed = LocalVelCancel(Player, Player.Speed.mul(.8), Normal) // TODO: see if you can do without?
                 }

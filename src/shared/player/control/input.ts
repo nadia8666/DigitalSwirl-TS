@@ -1,10 +1,13 @@
 import { Player } from "..";
 import { ButtonState } from "./buttonstate";
+import * as VUtil from "shared/common/VUtil";
+import * as CFUtil from "shared/common/CFUtil";
 
 export class Input {
     public Button
     public PlatformContext:string
     public ControllerContext:String
+    public Stick
 
     constructor() {
         this.Button = {
@@ -15,6 +18,7 @@ export class Input {
 
         this.PlatformContext = "PC" // assume pc by default
         this.ControllerContext = "Xbox"
+        this.Stick = Vector2.zero
     }
 
     public BindKeyCode(Input:ButtonState, KeyCode:Enum.KeyCode[]) {
@@ -60,6 +64,67 @@ export class Input {
             }
         }
 
+        // Stick
+        let PCStickX = 0
+        let PCStickY = 0
+        let CStickX = 0
+        let CStickY = 0
+        
+        PCStickX += game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.A) && -1 || 0
+        PCStickX += game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.D) && 1 || 0
+        PCStickY -= game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.W) && 1 || 0
+        PCStickY -= game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.S) && -1 || 0
+
+        ControllerState.forEach((Key) => {
+            if (Key.KeyCode === Enum.KeyCode.Thumbstick1) {
+                CStickX = Key.Position.X
+                CStickY = Key.Position.Z
+            }
+        })
+
+        this.Stick = new Vector2(PCStickX + CStickX, PCStickY + CStickY)
+        if (this.Stick.Magnitude > 0) { this.Stick = this.Stick.Unit }
+
+        // TODO: mobile stick
+
         // TODO: Update platform & controller context
+    }
+
+    public GetTurn(Player:Player) {
+        if (!game.Workspace.CurrentCamera || this.Stick.Magnitude === 0) { return 0 }
+
+        //Get character vectors
+		const tgt_up = Vector3.yAxis // TODO: camera chagne
+		const look = Player.Angle.LookVector
+		const up = Player.Angle.UpVector
+		
+		//Get camera angle, aligned to our target up vector
+		let cam_look = VUtil.PlaneProject(game.Workspace.CurrentCamera.CFrame.LookVector, tgt_up)[0]
+		if (cam_look.Magnitude !== 0) {
+            cam_look = cam_look.Unit  
+        } else {
+            cam_look = look
+        }
+		//Get move vector in world space, aligned to our target up vector
+		let cam_move = CFrame.fromAxisAngle(tgt_up, math.atan2(-Player.Input.Stick.X, -Player.Input.Stick.Y)).mul(cam_look)
+		
+		//Update last up
+		if (tgt_up.Dot(up) >= -0.999) {
+            Player.Flags.LastUp = up
+        }
+		
+		//Get final rotation and move vector
+		const final_rotation = CFUtil.FromToRotation(tgt_up, Player.Flags.LastUp)
+		
+		let final_move = VUtil.PlaneProject(final_rotation.mul(cam_move), up)[0]
+		if (final_move.Magnitude !== 0) {
+			final_move = final_move.Unit
+		} else {
+            final_move = look
+        }
+		
+		//Get turn amount
+		const turn = VUtil.SignedAngle(look, final_move, up)
+		return turn
     }
 }
