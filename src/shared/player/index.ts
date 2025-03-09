@@ -8,6 +8,7 @@ import { CharacterInfo } from "shared/characterinfo"
 
 export class DefaultFlags {
     public Grounded
+    public LastUp
     
     public Floor:BasePart|undefined
     public FloorLast:CFrame|undefined
@@ -18,6 +19,7 @@ export class DefaultFlags {
 
     constructor() {
         this.Grounded = false
+        this.LastUp = Vector3.yAxis
 
         this.Floor = undefined
         this.FloorLast = undefined
@@ -86,11 +88,11 @@ export class Player {
     }
 
     public ToLocal(Vector:Vector3) {
-        return this.GetAngle().VectorToObjectSpace(Vector)
+        return (this.GetAngle().mul(CFrame.Angles(0, math.rad(90), 0))).VectorToObjectSpace(Vector)
     }
 
     public ToGlobal(Vector:Vector3) {
-        return this.GetAngle().VectorToWorldSpace(Vector)
+        return (this.GetAngle().mul(CFrame.Angles(0, math.rad(90), 0))).VectorToWorldSpace(Vector)
     }
 
     public GetMiddle() {
