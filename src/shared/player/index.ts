@@ -14,6 +14,7 @@ export class DefaultFlags {
     public FloorLast:CFrame|undefined
     public FloorOffset:CFrame|undefined
     public FloorSpeed
+    public GroundRelative
 
     public Gravity:Vector3
 
@@ -25,10 +26,13 @@ export class DefaultFlags {
         this.FloorLast = undefined
         this.FloorOffset = undefined
         this.FloorSpeed = Vector3.zero
+        this.GroundRelative = -1
 
         this.Gravity = new Vector3(0, -1, 0)
     }
 }
+
+let PreviousAngle:CFrame|undefined
 
 export class Player {
     // Main
@@ -62,10 +66,11 @@ export class Player {
         this.Renderer = new Renderer(this)
         this.Input = new Input()
 
-
         this.Flags = new DefaultFlags()
 
         Render.RegisterStepped("Player", Enum.RenderPriority.Input.Value + 1, () => this.Update())
+        
+        PreviousAngle = CFrame.identity
 
         AddLog(`Loaded new player ${Character}`)
     }
@@ -75,7 +80,12 @@ export class Player {
     }
 
     public Update() {
-        
+        // Angle
+        if (PreviousAngle !== this.Angle) {
+            this.SetGroundRelative()
+            PreviousAngle = this.Angle
+        }
+
         // Update state machine
         this.State.Update()
 
@@ -97,5 +107,9 @@ export class Player {
 
     public GetMiddle() {
         return this.Position.add(this.Angle.UpVector.mul(this.Physics.Height * this.Physics.Scale))
+    }
+
+    public SetGroundRelative() {
+        this.Flags.GroundRelative = this.Angle.UpVector.mul(-1).Dot(this.Flags.Gravity.Unit)
     }
 }

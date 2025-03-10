@@ -7,13 +7,13 @@ export const PhysicsHandler = {
     // Acceleration
     AccelerateGrounded: (Player:Player) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
-        //TEMPORARY
-        let Decel = .2
-        let Acceleration = Player.Input.Stick.Magnitude > 0 && .1 || math.clamp(-Decel - ((Player.Speed.X) -Decel), -Decel, 0)
-        Acceleration *= SpeedMultiplier
-
-        Player.Speed = Player.Speed.add(new Vector3(Acceleration, 0, 0))
-        Player.Speed = Player.Speed.mul(new Vector3(1, 1, .25))
+        
+        //Get physics values
+        const weight = Player.Physics.Weight
+        const max_x_spd = Player.Physics.MaxXSpeed
+        const run_accel = Player.Physics.RunAcceleration
+        const frict_mult = Player.Flags.Grounded && 1 || 1// && Player.frict_mult or 1
+        
     },
     AccelerateAirborne: (Player:Player) => {
 
@@ -22,35 +22,47 @@ export const PhysicsHandler = {
     // Gravity
     ApplyGravity: (Player:Player) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
+        const weight = Player.Physics.Weight
+        
+        //Get cross product between our moving velocity and floor normal
+        const FloorCrossSpeed = Player.Flags.LastUp.Cross(Player.ToGlobal(Player.Speed)) // TODO: replace with floor normal if needed
+        let GravityAcceleration = Player.ToLocal(Player.Flags.Gravity.mul(weight))
+        if (Player.Flags.GroundRelative < 0.875) {
+            if (Player.Flags.GroundRelative >= 0.1 || math.abs(FloorCrossSpeed.Y) <= 0.6 || Player.Speed.X < 1.16) {
+                if (Player.Flags.GroundRelative >= -0.4 || Player.Speed.X <= 1.16) {
+                    if (Player.Flags.GroundRelative < -0.3 && Player.Speed.X > 1.16) {
+                    
+                    } else if (Player.Flags.GroundRelative < -0.1 && Player.Speed.X > 1.16) {
 
-        Player.Speed
-        //Gravity
-        const weight = Player.Physics.Weight // TODO: water weight
-        let Acceleration = Player.ToLocal(Player.Flags.Gravity).mul(weight)
-        
-        //mplify gravity
-        if (Player.Flags.Grounded /*&& self.spd.X > self.p.run_speed && self.dotp < 0*/) {
-            Acceleration = Acceleration.mul(new Vector3(1, -8, 1))
+                    } else if (Player.Flags.GroundRelative < 0.5 && math.abs(Player.Speed.X) < Player.Physics.RunSpeed) {
+                        GravityAcceleration = GravityAcceleration.mul(new Vector3(4.225, 1, 4.225))
+                    } else if (Player.Flags.GroundRelative >= 0.7 || math.abs(Player.Speed.X) > Player.Physics.RunSpeed) {
+                        if (Player.Flags.GroundRelative >= 0.87 || Player.Physics.JogSpeed <= math.abs(Player.Speed.X)) {
+                            
+                        } else {
+                            GravityAcceleration = GravityAcceleration.mul(new Vector3(1, 1, 1.4))
+                        }
+                    } else {
+                        GravityAcceleration = GravityAcceleration.mul(new Vector3(1, 1, 2))
+                    }
+                } else {
+
+                }
+            } else {
+                GravityAcceleration = new Vector3(0, -weight, 0)
+            }
+        } else {
+            GravityAcceleration = new Vector3(0, -weight, 0)
         }
-        
-        //Air drag
-        //if self.flag.ball_aura and self.dotp < 0.98 then
-        //    Acceleration = vector.AddX(Acceleration, self.spd.X * -0.0002)
-        //else
-        //    Acceleration = vector.AddX(Acceleration, self.spd.X * self.p.air_resist)
-        //end
-        //Acceleration = vector.AddY(Acceleration, self.spd.Y * self.p.air_resist_y)
-        //Acceleration = vector.AddZ(Acceleration, self.spd.Z * self.p.air_resist_z)
-        
-        //Apply acceleration
-        Player.Speed = Player.Speed.add(Acceleration.mul(SpeedMultiplier))
+
+        Player.Speed = Player.Speed.add(GravityAcceleration.mul(SpeedMultiplier))
     },
 
     // Movement
     // TOOD: port https://github.com/SonicOnset/DigitalSwirl-Client/blob/master/ControlScript/Player/Movement.lua
     
     AlignToGravity: (Player:Player) => {
-        if (/*self.spd.magnitude < self.p.dash_speed*/ true /*TODO: this*/) {
+        if (/*Player.Speed.magnitude < Player.p.dash_speed*/ true /*TODO: this*/) {
             //Remember previous speed
             const prev_spd = Player.ToGlobal(Player.Speed)
             
