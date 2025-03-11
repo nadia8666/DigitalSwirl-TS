@@ -7,13 +7,6 @@ export const PhysicsHandler = {
     // Acceleration
     AccelerateGrounded: (Player:Player) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
-        
-        //Get physics values
-        const weight = Player.Physics.Weight
-        const max_x_spd = Player.Physics.MaxXSpeed
-        const run_accel = Player.Physics.RunAcceleration
-        const frict_mult = Player.Flags.Grounded && 1 || 1// && Player.frict_mult or 1
-        
     },
     AccelerateAirborne: (Player:Player) => {
 
