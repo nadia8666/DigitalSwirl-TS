@@ -5,6 +5,7 @@ import { StateMachine } from "./statemachine"
 import * as Render from "shared/common/renderregistry"
 import { Input } from "./control/input"
 import { CharacterInfo } from "shared/characterinfo"
+import { UIMain } from "./ui"
 
 export class DefaultFlags {
     public Grounded
@@ -52,6 +53,7 @@ export class Player {
     public Camera: Camera
     public Renderer: Renderer
     public Input: Input
+    public UI: UIMain
 
     constructor(Character: Model) {        
         this.Character = Character
@@ -65,6 +67,7 @@ export class Player {
         this.Camera = new Camera(this)
         this.Renderer = new Renderer(this)
         this.Input = new Input()
+        this.UI = new UIMain()
 
         this.Flags = new DefaultFlags()
 
