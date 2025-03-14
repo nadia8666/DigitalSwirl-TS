@@ -13,11 +13,12 @@ export class StateAirborne extends StateBase {
     protected AfterUpdateHook(Player:Player) {
         PhysicsHandler.ApplyGravity(Player) 
         PhysicsHandler.TurnDefault(Player, Player.Input.GetTurn(Player))
-        PhysicsHandler.AccelerateGrounded(Player)
+        PhysicsHandler.AccelerateAirborne(Player)
         PhysicsHandler.AlignToGravity(Player)
 
         if (Player.Flags.Grounded) {
             Player.State.Current = Player.State.Get("Grounded")
+            Player.Land()
         }
     }
 }

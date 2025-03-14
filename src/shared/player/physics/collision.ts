@@ -230,19 +230,20 @@ export function RunCollision(Player:Player) {
             let PositionError = Player.Flags.Grounded && (Player.Physics.PositionError * Player.Physics.Scale) || 0
             let FloorUp = Player.Physics.Height * Player.Physics.Scale
             let FloorDown = -(FloorUp + PositionError)
+            print(FloorDown)
             
             if (Player.Speed.Y < 0) {
                 FloorDown += Player.Speed.Y * SpeedMultiplier * Player.Physics.Scale //Moving downwards, extend raycast downwards
             } else if (Player.Speed.Y > 0) {
                 FloorUp += Player.Speed.Y * Player.Physics.Scale //Moving upwards, move raycast upwards
+                FloorDown = Player.Speed.Y - .1
             }
+
             
             const From = Player.Position.add(Player.Angle.UpVector.mul(FloorUp))
             const Direction = Player.Angle.UpVector.mul(FloorDown)
-            const Result = Raycast(CollisionWhitelist, From, Direction)
-            let Hit = Result[0]
-            const Position = Result[1]
-            const Normal = Result[2]
+            const _ = Raycast(CollisionWhitelist, From, Direction)
+            let Hit = _[0], Position = _[1], Normal = _[2]
             
             //Do additional collision checks
             if (Hit && Position && Normal) {

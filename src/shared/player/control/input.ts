@@ -127,4 +127,10 @@ export class Input {
 		const turn = VUtil.SignedAngle(look, final_move, up)
 		return turn
     }
+
+    public Get(Player:Player) {
+        // has_control, stick_mag, last_turn
+        // TODO: has_control
+        return $tuple(true && this.Stick.Magnitude !== 0, this.GetTurn(Player), this.Stick.Magnitude)
+    }
 }
