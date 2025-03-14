@@ -3,13 +3,127 @@ import { Player } from "..";
 import * as VUtil from "shared/common/VUtil";
 import * as CFUtil from "shared/common/CFUtil";
 
+declare function unpack<T>(arr: Array<T>): T
+
 export const PhysicsHandler = {
     // Acceleration
     AccelerateGrounded: (Player:Player) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
+
+        const MaxXSoeed = Player.Physics.MaxXSpeed
+        const RunAcceleration = Player.Physics.RunAcceleration
+        const Friction = /*self.flag.grounded and self.frict_mult*/ 1 || 1
+
+        //Get analogue state
+        let Acceleration = new Vector3(0,0,0)
+        let MovementAcceleration = 0
+        let _ = Player.Input.Get(Player)
+        const HasControl = _[0], Turn = _[1], Magnitude = _[2] // TODO: implement this for all $tuples
+        
+        //X air drag
+        // TODO: see if i can improve
+        if (HasControl) {
+            if (Player.Speed.X <= MaxXSoeed || Player.Flags.GroundRelative <= 0.96) {
+                if (Player.Speed.X > MaxXSoeed) {
+                    Acceleration = Acceleration.add(new Vector3((Player.Speed.X - MaxXSoeed) * Player.Physics.AirResist.X, 0, 0))
+                } else if (Player.Speed.X < 0) {
+                    Acceleration = Acceleration.add(new Vector3(Player.Speed.X * Player.Physics.AirResist.X, 0, 0))
+                }
+            } else {
+                Acceleration = Acceleration.add(new Vector3((Player.Speed.X - MaxXSoeed) * (Player.Physics.AirResist.X * 1.7), 0, 0))
+            }
+        } else {
+            if (Player.Speed.X > Player.Physics.RunSpeed) {
+                Acceleration = Acceleration.add(new Vector3(Player.Speed.X * Player.Physics.AirResist.X))
+            } else if (Player.Speed.X > MaxXSoeed) {
+                Acceleration = Acceleration.add(new Vector3((Player.Speed.X - MaxXSoeed) * Player.Physics.AirResist.X))
+            } else if (Player.Speed.X < 0) {
+                Acceleration = Acceleration.add(new Vector3(Player.Speed.X * Player.Physics.AirResist.X))
+            }
+        }
+        
+        //Y and Z air drag
+        Player.Speed = Player.Speed.add(Player.Speed.mul(new Vector3(0, Player.Physics.AirResist.Y, Player.Physics.AirResist.Z)))
+        
+        //Movement
+        if (HasControl) {
+            //Get acceleration
+            if (Player.Speed.X >= MaxXSoeed) {
+                //Use lower acceleration if above max speed
+                if (Player.Speed.X < MaxXSoeed || Player.Flags.GroundRelative >= 0) {
+                    MovementAcceleration = RunAcceleration * Magnitude * 0.4
+                } else {
+                    MovementAcceleration = RunAcceleration * Magnitude
+                }
+            } else {
+                //Get acceleration, stopping at intervals based on analogue stick magnitude
+                MovementAcceleration = 0
+                
+                if (Player.Speed.X >= Player.Physics.JogSpeed) {
+                    if (Player.Speed.X >= Player.Physics.RunSpeed) {
+                        if (Magnitude <= 0.9) {
+                            MovementAcceleration = RunAcceleration * Magnitude * 0.3
+                        } else {
+                            MovementAcceleration = RunAcceleration * Magnitude
+                        }
+                    } else if (Magnitude <= 0.7) {
+                        if (Player.Speed.X < Player.Physics.RunSpeed) {
+                            MovementAcceleration = RunAcceleration * Magnitude
+                        }
+                    } else {
+                        MovementAcceleration = RunAcceleration * Magnitude
+                    }
+                } else if (Magnitude <= 0.5) {
+                    if (Player.Speed.X < (Player.Physics.JogSpeed + Player.Physics.RunSpeed) * 0.5) {
+                        MovementAcceleration = RunAcceleration * Magnitude
+                    }
+                } else {
+                    MovementAcceleration = RunAcceleration * Magnitude
+                }
+            }
+            
+            //Turning
+            const AbsoluteTurn = math.abs(Turn)
+            if (math.abs(Player.Speed.X) < 0.001 && AbsoluteTurn > math.rad(22.5)) {
+                MovementAcceleration = 0
+                //self:AdjustAngleYQ(analogue_turn)
+            } else {
+                if (Player.Speed.X < (Player.Physics.JogSpeed + Player.Physics.RunSpeed) * 0.5 || AbsoluteTurn <= math.rad(22.5)) {
+                    if (Player.Speed.X < Player.Physics.JogSpeed || AbsoluteTurn >= math.rad(22.5)) {
+                        if (Player.Speed.X < Player.Physics.DashSpeed || !Player.Flags.Grounded) {
+                            if (Player.Speed.X >= Player.Physics.JogSpeed && Player.Speed.X <= Player.Physics.RushSpeed && AbsoluteTurn > math.rad(45)) {
+                                MovementAcceleration *= 0.8
+                            }
+                            //self:AdjustAngleY(analogue_turn)
+                        } else {
+                            //self:AdjustAngleYS(analogue_turn)
+                        }
+                    } else {
+                        //self:AdjustAngleYS(analogue_turn)
+                    }
+                } else {
+                    MovementAcceleration = Player.Physics.StandardDeceleration / Friction
+                    //self:AdjustAngleY(analogue_turn)
+                }
+            }
+        } else { 
+            //Decelerate
+            MovementAcceleration = PhysicsHandler.GetDecel(Player.Speed.X + Acceleration.X, Player.Physics.StandardDeceleration)
+        }
+        
+        //Apply movement acceleration
+        Acceleration = Acceleration.add(new Vector3(MovementAcceleration * Friction, 0, 0))
+
+        //Apply acceleration
+        Player.Speed = Player.Speed.add(Acceleration)
     },
     AccelerateAirborne: (Player:Player) => {
+        PhysicsHandler.AccelerateGrounded(Player)
 
+        if /*(self.rail_trick > 0) ||*/ (Player.Flags.JumpTimer > 0 && Player.Flags.BallEnabled && Player.Input.Button.Jump.Activated) {
+            Player.Flags.JumpTimer -= 1
+            Player.Speed = Player.Speed.add(new Vector3(0, Player.Physics.JumpHoldForce * 0.8 /* * (1 + self.rail_trick / 2)*/, 0))
+        }
     },
 
     // Gravity
@@ -100,5 +214,14 @@ export const PhysicsHandler = {
         
         //Turn
         PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn) * SpeedMultiplier)
+    },
+
+    GetDecel(Speed:number, Deceleration:number) {
+        if (Speed > 0) {
+            return -math.min(Speed, -Deceleration)
+        } else if (Speed < 0) {
+            return math.min(-Speed, -Deceleration)
+        }
+        return 0
     }
 }

@@ -17,6 +17,11 @@ export class DefaultFlags {
     public FloorSpeed
     public GroundRelative
 
+    public BallEnabled
+    public TrailEnabled
+
+    public JumpTimer
+
     public Gravity:Vector3
 
     constructor() {
@@ -28,6 +33,11 @@ export class DefaultFlags {
         this.FloorOffset = undefined
         this.FloorSpeed = Vector3.zero
         this.GroundRelative = -1
+
+        this.BallEnabled = false
+        this.TrailEnabled = false
+        
+        this.JumpTimer = 0
 
         this.Gravity = new Vector3(0, -1, 0)
     }
@@ -114,5 +124,19 @@ export class Player {
 
     public SetGroundRelative() {
         this.Flags.GroundRelative = this.Angle.UpVector.mul(-1).Dot(this.Flags.Gravity.Unit)
+    }
+
+    public EnterBall() {
+        this.Flags.TrailEnabled = false
+        this.Flags.BallEnabled = true
+    }
+
+    public ExitBall() {
+        this.Flags.TrailEnabled = false
+        this.Flags.BallEnabled = false
+    }
+
+    public Land() {
+        this.ExitBall()
     }
 }

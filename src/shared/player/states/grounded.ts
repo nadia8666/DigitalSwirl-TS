@@ -1,4 +1,5 @@
 import { Player } from "..";
+import { CheckJump } from "../moves/jump";
 import { PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
@@ -8,12 +9,7 @@ export class StateGrounded extends StateBase {
     }
 
     protected CheckInput(Player:Player) {
-        if (Player.Input.Button.Jump.Pressed) {
-            Player.State.Current = Player.State.Get("Airborne")
-            Player.Speed = Player.Speed.add(new Vector3(0, 5, 0))
-
-            print("Jump")
-        }
+        return CheckJump(Player)
     }
 
     protected AfterUpdateHook(Player:Player) {
