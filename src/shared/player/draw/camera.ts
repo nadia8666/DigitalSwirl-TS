@@ -50,7 +50,10 @@ export class Camera {
         if (RotatingCamera) {
             let CamDelta = game.GetService("UserInputService").GetMouseDelta()
             if (JoyRight.Magnitude > .15) {
-                CamDelta = JoyRight.mul(new Vector2(1, -1)) //TODO: customizable sensitivity
+                const CamSens = UserSettings().GetService("UserGameSettings").MouseSensitivity
+
+                //TODO: rough approx. see how playerscripts does it for gamepad later
+                CamDelta = JoyRight.mul(new Vector2(1, -1)).mul(5).mul(CamSens) //TODO: customizable sensitivity
             }
 
             const YInvert = UserSettings().GetService("UserGameSettings").GetCameraYInvertValue()
