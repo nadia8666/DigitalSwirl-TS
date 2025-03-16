@@ -7,5 +7,6 @@ export function CheckHomingAttack(Player:Player) {
 
         Player.ExitBall()
         Player.Flags.TrailEnabled = true
+        Player.Animation.Current = "Fall"
     }
 }

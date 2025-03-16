@@ -1,7 +1,7 @@
 import { FrameworkState } from "shared/common/frameworkstate";
 import { Player } from "..";
-import * as VUtil from "shared/common/VUtil";
-import * as CFUtil from "shared/common/CFUtil";
+import * as VUtil from "shared/common/vutil";
+import * as CFUtil from "shared/common/cfutil";
 
 export enum IntertiaState {
     FULL_INERTIA,

@@ -17,7 +17,10 @@ export class StateGrounded extends StateBase {
         //PhysicsHandler.Turn(Player, Player.Input.GetTurn(Player), undefined)
         PhysicsHandler.AccelerateGrounded(Player)
 
-        if (!Player.Flags.Grounded) {
+        if (Player.Flags.Grounded) {
+            Player.Animation.Current = Player.Speed.X > 0 && "Run" || "Idle"
+        } else {
+            Player.Animation.Current = "Fall"
             Player.State.Current = Player.State.Get("Airborne")
         }
     }

@@ -6,13 +6,13 @@ export class _UI_Debugger {
     public Root
 
     constructor() {
-        this.Root = <ComponentBase Size={UDim2.fromScale(.25, .6)}>
+        this.Root = <ComponentBase Size={UDim2.fromScale(.25, .6)} Visible={false}>
             <CollapsibleList Text="PLAYER">
                 <CollapsibleList Text="CONFIG" Size={UDim2.fromScale(1, 1)}>
-                
+
                 </CollapsibleList>
                 <CollapsibleList Text="VALUES" Size={UDim2.fromScale(1, 1)}>
-            
+
                 </CollapsibleList>
             </CollapsibleList>
             <uiaspectratioconstraint AspectRatio={.65} />

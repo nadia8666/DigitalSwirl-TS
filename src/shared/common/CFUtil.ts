@@ -1,4 +1,4 @@
-import * as VUtil from "./VUtil"
+import * as VUtil from "./vutil"
 
 export function FromToRotation(from:Vector3, to:Vector3) {
     //Get our axis and angle

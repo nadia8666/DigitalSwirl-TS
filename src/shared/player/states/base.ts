@@ -23,6 +23,7 @@ export class StateBase {
 
         // Post update
         this.AfterUpdateHook(Player)
+        Player.Animation.Animate(Player)
     }
 
     protected CheckInput(Player:Player) {

@@ -9,5 +9,6 @@ export function CheckJump(Player:Player) {
         Player.Flags.JumpTimer = Player.Physics.JumpTicks
         
         Player.EnterBall()
+        Player.Animation.Current = "Roll"
     }
 }

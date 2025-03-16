@@ -6,6 +6,7 @@ import * as Render from "shared/common/renderregistry"
 import { Input } from "./control/input"
 import { CharacterInfo } from "shared/characterinfo"
 import { UIMain } from "./ui"
+import { Animation } from "./draw/animation"
 
 export class DefaultFlags {
     public Grounded
@@ -54,6 +55,7 @@ export class Player {
     
     // Character info
     public Physics
+    public Animations
 
     // Flags
     public Flags:DefaultFlags
@@ -61,19 +63,22 @@ export class Player {
     // Modules
     public readonly State: StateMachine
     public Camera: Camera
+    public readonly Animation: Animation
     public Renderer: Renderer
     public Input: Input
     public UI: UIMain
 
-    constructor(Character: Model) {        
+    constructor(Character: Model) {
         this.Character = Character
         this.Position = Character.GetPivot().Position
         this.Angle = Character.GetPivot().Rotation
         this.Speed = Vector3.zero
 
         this.Physics = CharacterInfo.Physics
+        this.Animations = CharacterInfo.Animations
 
         this.State = new StateMachine(this)
+        this.Animation = new Animation(this)
         this.Camera = new Camera(this)
         this.Renderer = new Renderer(this)
         this.Input = new Input()

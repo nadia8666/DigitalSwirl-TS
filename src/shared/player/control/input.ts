@@ -1,7 +1,7 @@
 import { Player } from "..";
 import { ButtonState } from "./buttonstate";
-import * as VUtil from "shared/common/VUtil";
-import * as CFUtil from "shared/common/CFUtil";
+import * as VUtil from "shared/common/vutil";
+import * as CFUtil from "shared/common/cfutil";
 
 export class Input {
     public Button

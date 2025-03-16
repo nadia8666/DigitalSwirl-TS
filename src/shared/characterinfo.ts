@@ -1,6 +1,12 @@
 // TODO: completely remake this system
 
-export const CharacterInfo = {
+export type CharacterInfo = typeof CharacterInfo
+export type AnimationList = typeof CharacterInfo.Animations
+export type InferredAnimation = { [index:number]: { id: string; asset: AnimationTrack; pos:number|undefined }; }
+
+let BaseAnimation:AnimationTrack = (undefined as unknown as AnimationTrack)
+
+export let CharacterInfo = {
     Physics: {
         // Collision
         Height: 5,
@@ -30,8 +36,44 @@ export const CharacterInfo = {
 
 		// Moves
 		HomingForce: {AirDash:5, HomingAttack:5}
-    }
+    },
+
+	Animations: {
+		Idle: {
+			[0]: { id:"120676159453993", asset: BaseAnimation }
+		},
+		Roll: {
+			[0]: { id: "89521650226043", asset: BaseAnimation },
+			spd_b: 1.5,
+			spd_i: 0.65,
+			spd_a: true
+		},
+		Fall: {
+			[0]: { id: "106824283599126", asset: BaseAnimation }
+		},
+		Run: {
+			[0]: {
+				id: "92382564179188",
+				asset: BaseAnimation,
+				pos: 0/2
+			},
+			[1]: {
+				id: "72318789019564",
+				asset: BaseAnimation,
+				pos: 4/2
+			}, 
+			[2]: {
+				id: "73079985595263",
+				asset: BaseAnimation,
+				pos: 6.5/2
+			},
+			spd_b: [.2, .2, .3],  // base speed
+			spd_i: [.3, .3, .4], // speed incremental
+			spd_a: false,
+		},
+	}
 }
+
 
 /*
 

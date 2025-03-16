@@ -1,8 +1,8 @@
 import { FrameworkState } from "shared/common/frameworkstate";
 import { Player } from "..";
 import { GlobalReference } from "shared/common/globalreference";
-import * as VUtil from "shared/common/VUtil"
-import * as CFUtil from "shared/common/CFUtil"
+import * as VUtil from "shared/common/vutil"
+import * as CFUtil from "shared/common/cfutil"
 import { Constants } from "shared/common/constants";
 
 const CollisionReference = new GlobalReference("Workspace/Level/Map/Collision")
