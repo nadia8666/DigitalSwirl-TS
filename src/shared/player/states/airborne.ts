@@ -1,5 +1,6 @@
 import { Player } from "..";
-import { IntertiaState, PhysicsHandler } from "../physics/physics";
+import { CheckHomingAttack } from "../moves/homingattack";
+import { PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
 export class StateAirborne extends StateBase {
@@ -7,7 +8,8 @@ export class StateAirborne extends StateBase {
         super()
     }
 
-    protected CheckInput() {
+    protected CheckInput(Player:Player) {
+        return CheckHomingAttack(Player)
     }
 
     protected AfterUpdateHook(Player:Player) {

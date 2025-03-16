@@ -27,6 +27,9 @@ export const CharacterInfo = {
         StandardDeceleration: -.06,
 
         AirResist: new Vector3(-.008, -.01, -.4),
+
+		// Moves
+		HomingForce: {AirDash:5, HomingAttack:5}
     }
 }
 

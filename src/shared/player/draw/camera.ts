@@ -31,25 +31,30 @@ export class Camera {
         if (!game.Workspace.CurrentCamera) { return }
         if (game.Workspace.CurrentCamera.CameraType === Enum.CameraType.Scriptable) { return }
         
-        let JoyLeft = Vector3.zero; let JoyRight = Vector3.zero
+        let JoyLeft = Vector3.zero; let JoyRight = Vector2.zero
         
         const GPState = game.GetService("UserInputService").GetGamepadState(Enum.UserInputType.Gamepad1)
         GPState.forEach((Value)=>{
             if (Value.KeyCode === Enum.KeyCode.Thumbstick1) {
                 JoyLeft = Value.Position
             } else if (Value.KeyCode === Enum.KeyCode.Thumbstick2) {
-                JoyRight = Value.Position
+                JoyRight = new Vector2(Value.Position.X, Value.Position.Y)
             }
         })
         
         const RotatingCamera = 
         (game.GetService("UserInputService").IsMouseButtonPressed(Enum.UserInputType.MouseButton2) && game.GetService("UserInputService").GetMouseDelta().Magnitude > 0) 
         || 
-        JoyRight.Magnitude > 0
+        JoyRight.Magnitude > .15 //TODO: DEADZONE
         
         if (RotatingCamera) {
+            let CamDelta = game.GetService("UserInputService").GetMouseDelta()
+            if (JoyRight.Magnitude > .15) {
+                CamDelta = JoyRight.mul(new Vector2(1, -1)) //TODO: customizable sensitivity
+            }
+
             const YInvert = UserSettings().GetService("UserGameSettings").GetCameraYInvertValue()
-            const Delta = game.GetService("UserInputService").GetMouseDelta().mul(MouseSensitivity).mul(50)
+            const Delta = CamDelta.mul(MouseSensitivity).mul(50)
             
             const PitchMod = -Delta.Y * YInvert
             const YawMod = -Delta.X

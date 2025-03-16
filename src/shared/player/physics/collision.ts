@@ -230,7 +230,6 @@ export function RunCollision(Player:Player) {
             let PositionError = Player.Flags.Grounded && (Player.Physics.PositionError * Player.Physics.Scale) || 0
             let FloorUp = Player.Physics.Height * Player.Physics.Scale
             let FloorDown = -(FloorUp + PositionError)
-            print(FloorDown)
             
             if (Player.Speed.Y < 0) {
                 FloorDown += Player.Speed.Y * SpeedMultiplier * Player.Physics.Scale //Moving downwards, extend raycast downwards

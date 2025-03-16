@@ -8,6 +8,6 @@ export function CheckJump(Player:Player) {
         Player.Flags.Grounded = false
         Player.Flags.JumpTimer = Player.Physics.JumpTicks
         
-        Player.Flags.BallEnabled = true
+        Player.EnterBall()
     }
 }

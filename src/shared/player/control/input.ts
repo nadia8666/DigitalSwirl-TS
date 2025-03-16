@@ -77,8 +77,10 @@ export class Input {
 
         ControllerState.forEach((Key) => {
             if (Key.KeyCode === Enum.KeyCode.Thumbstick1) {
+                if (Key.Position.Magnitude <= .15) { return } // TODO: customizable deadzone
+
                 CStickX = Key.Position.X
-                CStickY = Key.Position.Z
+                CStickY = -Key.Position.Y
             }
         })
 
