@@ -14,7 +14,7 @@ export class StateGrounded extends StateBase {
 
     protected AfterUpdateHook(Player:Player) {
         PhysicsHandler.ApplyGravity(Player) 
-        PhysicsHandler.TurnDefault(Player, Player.Input.GetTurn(Player), undefined)
+        //PhysicsHandler.Turn(Player, Player.Input.GetTurn(Player), undefined)
         PhysicsHandler.AccelerateGrounded(Player)
 
         if (!Player.Flags.Grounded) {

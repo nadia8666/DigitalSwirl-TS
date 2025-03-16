@@ -89,7 +89,7 @@ export const PhysicsHandler = {
             const AbsoluteTurn = math.abs(Turn)
             if (math.abs(Player.Speed.X) < 0.001 && AbsoluteTurn > math.rad(22.5)) {
                 MovementAcceleration = 0
-                //self:AdjustAngleYQ(analogue_turn)
+                PhysicsHandler.Turn(Player, Turn, IntertiaState.FULL_INERTIA)
             } else {
                 if (Player.Speed.X < (Player.Physics.JogSpeed + Player.Physics.RunSpeed) * 0.5 || AbsoluteTurn <= math.rad(22.5)) {
                     if (Player.Speed.X < Player.Physics.JogSpeed || AbsoluteTurn >= math.rad(22.5)) {
@@ -97,16 +97,16 @@ export const PhysicsHandler = {
                             if (Player.Speed.X >= Player.Physics.JogSpeed && Player.Speed.X <= Player.Physics.RushSpeed && AbsoluteTurn > math.rad(45)) {
                                 MovementAcceleration *= 0.8
                             }
-                            //self:AdjustAngleY(analogue_turn)
+                            PhysicsHandler.Turn(Player, Turn, undefined)
                         } else {
-                            //self:AdjustAngleYS(analogue_turn)
+                            PhysicsHandler.Turn(Player, Turn, IntertiaState.GROUND_NOFRICT)
                         }
                     } else {
-                        //self:AdjustAngleYS(analogue_turn)
+                        PhysicsHandler.Turn(Player, Turn, IntertiaState.GROUND_NOFRICT)
                     }
                 } else {
                     MovementAcceleration = Player.Physics.StandardDeceleration / Friction
-                    //self:AdjustAngleY(analogue_turn)
+                    PhysicsHandler.Turn(Player, Turn, undefined)
                 }
             }
         } else { 
@@ -200,7 +200,7 @@ export const PhysicsHandler = {
         Player.Angle = Player.Angle.mul(CFrame.Angles(0, Turn, 0))
     },
 
-    TurnDefault: (Player:Player, Turn:number, IState:IntertiaState|undefined) => {
+    Turn: (Player:Player, Turn:number, IState:IntertiaState|undefined) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
 
         let MaxTurn = math.abs(Turn)
@@ -231,6 +231,8 @@ export const PhysicsHandler = {
             }
         }
         
+        MaxTurn = math.abs(MaxTurn)
+
         //Turn
         PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn) * SpeedMultiplier)
 

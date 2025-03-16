@@ -12,7 +12,7 @@ export class StateAirborne extends StateBase {
 
     protected AfterUpdateHook(Player:Player) {
         PhysicsHandler.ApplyGravity(Player) 
-        PhysicsHandler.TurnDefault(Player, Player.Input.GetTurn(Player), undefined)
+        //PhysicsHandler.Turn(Player, Player.Input.GetTurn(Player), undefined)
         PhysicsHandler.AccelerateAirborne(Player)
         PhysicsHandler.AlignToGravity(Player)
 
