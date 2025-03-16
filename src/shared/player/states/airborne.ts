@@ -1,5 +1,5 @@
 import { Player } from "..";
-import { PhysicsHandler } from "../physics/physics";
+import { IntertiaState, PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
 export class StateAirborne extends StateBase {
@@ -12,7 +12,7 @@ export class StateAirborne extends StateBase {
 
     protected AfterUpdateHook(Player:Player) {
         PhysicsHandler.ApplyGravity(Player) 
-        PhysicsHandler.TurnDefault(Player, Player.Input.GetTurn(Player))
+        PhysicsHandler.TurnDefault(Player, Player.Input.GetTurn(Player), undefined)
         PhysicsHandler.AccelerateAirborne(Player)
         PhysicsHandler.AlignToGravity(Player)
 

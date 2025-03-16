@@ -1,6 +1,6 @@
 import { Player } from "..";
 import { CheckJump } from "../moves/jump";
-import { PhysicsHandler } from "../physics/physics";
+import { IntertiaState, PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
 export class StateGrounded extends StateBase {
@@ -14,7 +14,7 @@ export class StateGrounded extends StateBase {
 
     protected AfterUpdateHook(Player:Player) {
         PhysicsHandler.ApplyGravity(Player) 
-        PhysicsHandler.TurnDefault(Player, Player.Input.GetTurn(Player))
+        PhysicsHandler.TurnDefault(Player, Player.Input.GetTurn(Player), undefined)
         PhysicsHandler.AccelerateGrounded(Player)
 
         if (!Player.Flags.Grounded) {

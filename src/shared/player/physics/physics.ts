@@ -3,7 +3,10 @@ import { Player } from "..";
 import * as VUtil from "shared/common/VUtil";
 import * as CFUtil from "shared/common/CFUtil";
 
-declare function unpack<T>(arr: Array<T>): T
+export enum IntertiaState {
+    FULL_INERTIA,
+    GROUND_NOFRICT,
+}
 
 export const PhysicsHandler = {
     // Acceleration
@@ -197,23 +200,77 @@ export const PhysicsHandler = {
         Player.Angle = Player.Angle.mul(CFrame.Angles(0, Turn, 0))
     },
 
-    TurnDefault: (Player:Player, Turn:number) => {
+    TurnDefault: (Player:Player, Turn:number, IState:IntertiaState|undefined) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
 
         let MaxTurn = math.abs(Turn)
-	
-        if (MaxTurn <= math.rad(45)) {
-            if (MaxTurn <= math.rad(22.5)) {
-                MaxTurn /= 8
-            }else {
-                MaxTurn /= 4
+        const HasControl = Player.Input.Get(Player)[0]
+        const PreviousSpeed = Player.ToGlobal(Player.Speed)
+
+        /*
+            UNDEFINED: Y
+            FULL_INERTIA: YQ
+            GROUND_NOFRICT: YS
+        */
+        if (IState === undefined) { // cannot do !IState?
+            if (MaxTurn <= math.rad(45)) {
+                if (MaxTurn <= math.rad(22.5)) {
+                    MaxTurn /= 8
+                }else {
+                    MaxTurn /= 4
+                }
+            } else {
+                MaxTurn = math.rad(11.25)
             }
-        } else {
-            MaxTurn = math.rad(11.25)
+        } else if (IState === IntertiaState.FULL_INERTIA) {
+            MaxTurn = math.clamp(Turn, math.rad(-45), math.rad(45))
+        } else if (IState === IntertiaState.GROUND_NOFRICT) {
+            MaxTurn = math.rad(1.40625)
+            if (Player.Speed.X > Player.Physics.DashSpeed) {
+                MaxTurn = math.max(MaxTurn - (math.sqrt(((Player.Speed.X - Player.Physics.DashSpeed) * 0.0625)) * MaxTurn), 0)
+            }
         }
         
         //Turn
         PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn) * SpeedMultiplier)
+
+        if (IState === undefined) {
+            if (Player.Flags.Grounded) {
+                Player.Speed = Player.Speed.mul(.1).add(Player.ToLocal(PreviousSpeed).mul(.9))
+            } else {
+                let Inertia
+
+                if (HasControl) {
+                    if (Player.Flags.GroundRelative <= .4) {
+                        Inertia = .5
+                    } else {
+                        Inertia = .01
+                    }
+                } else {
+                    Inertia = .95
+                }
+
+                /*
+                if self.frict_mult < 1 then
+				    inertia *= self.frict_mult
+			    end
+                */
+
+                Player.Speed = Player.Speed.mul(1 - Inertia).add(Player.ToLocal(PreviousSpeed).mul(Inertia))
+            }
+        } else if (IState === IntertiaState.FULL_INERTIA) {
+            Player.Speed = Player.ToLocal(PreviousSpeed)
+        } else if (IState === IntertiaState.GROUND_NOFRICT) {
+            let Inertia
+            if (Player.Flags.GroundRelative <= .4) {
+                Inertia = .5
+            } else {
+                Inertia = .01
+            }
+
+            Player.Speed = Player.Speed.mul(1 - Inertia).add(Player.ToLocal(PreviousSpeed).mul(Inertia))
+        }
+
     },
 
     GetDecel(Speed:number, Deceleration:number) {
