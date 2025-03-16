@@ -55,17 +55,17 @@ export let CharacterInfo = {
 			[0]: {
 				id: "92382564179188",
 				asset: BaseAnimation,
-				pos: 0/2
+				pos: 0
 			},
 			[1]: {
 				id: "72318789019564",
 				asset: BaseAnimation,
-				pos: 4/2
+				pos: 4
 			}, 
 			[2]: {
 				id: "73079985595263",
 				asset: BaseAnimation,
-				pos: 6.5/2
+				pos: 6.5
 			},
 			spd_b: [.2, .2, .3],  // base speed
 			spd_i: [.3, .3, .4], // speed incremental
