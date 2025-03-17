@@ -3,8 +3,11 @@ node_modules/
 .vscode/
 out/
 include/
+
 # vsc workspace
-SonicR Rewrite.code-workspace
+*.code-workspace
+
 #rbxl
 main.rbxl
 main.rbxl.*
+*.rbxl

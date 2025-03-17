@@ -1,5 +1,6 @@
 type Log = Array<string>;
 
+const Verbose = false
 const LogTable: Map<number, Log> = new Map();
 
 export function AddLog(Value:unknown) {
@@ -9,6 +10,10 @@ export function AddLog(Value:unknown) {
 
     const Tick = os.clock();
     const Original:Log|undefined = LogTable.get(Tick);
+
+    if (Verbose) {
+        print(Value)
+    }
 
     if (Original !== undefined) {
 		// Insert new log for current registered tick
@@ -26,4 +31,10 @@ export function AddLog(Value:unknown) {
 
 export function WipeLog() {
 	LogTable.clear();
+}
+
+export function ExportLog() {
+    if (Verbose) {
+        print()
+    }
 }

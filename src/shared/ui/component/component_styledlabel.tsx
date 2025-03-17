@@ -1,7 +1,7 @@
 import React from "@rbxts/react";
 import { ComponentProperties } from "./properties";
 
-export function StyledTextLabel(Properties: ComponentProperties<TextLabel>) {
+export function ComponentStyledTextLabel(Properties: ComponentProperties<TextLabel>) {
     return (
         <textlabel
             Size={Properties.Size || UDim2.fromScale(.5, .5)}
