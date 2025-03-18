@@ -48,6 +48,9 @@ export let CharacterInfo = {
 			spd_i: 0.65,
 			spd_a: true
 		},
+		Spindash: {
+			[0]: { id: "89521650226043", asset: BaseAnimation },
+		},
 		Fall: {
 			[0]: { id: "106824283599126", asset: BaseAnimation }
 		},

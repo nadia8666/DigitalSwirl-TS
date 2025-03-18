@@ -24,6 +24,9 @@ export class DefaultFlags {
     public JumpTimer
 
     public Gravity:Vector3
+    
+    // Moves
+    public SpindashSpeed
 
     constructor() {
         this.Grounded = false
@@ -41,6 +44,9 @@ export class DefaultFlags {
         this.JumpTimer = 0
 
         this.Gravity = new Vector3(0, -1, 0)
+        
+        // Moves
+        this.SpindashSpeed = 0
     }
 }
 
