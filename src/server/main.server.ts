@@ -1,15 +1,16 @@
+import { Players, RunService } from "@rbxts/services"
 import Net, { Route } from "@rbxts/yetanothernet"
 import * as Routes from "shared/common/replication/routes"
 
 const ReplicationRemote:Route<Routes.UpdateRoute> = Routes.UpdateRoute
 
-game.GetService("RunService").Heartbeat.Connect(() => {
+RunService.Heartbeat.Connect(() => {
     for (const [Index, Sender, Packet] of ReplicationRemote.query()) {
         if (typeIs(Sender, "string")) { continue }
 
-        const Players = game.GetService("Players").GetPlayers()
+        const PlayerList = Players.GetPlayers()
 
-        Players.forEach((Player) => {
+        PlayerList.forEach((Player) => {
             if (Player !== Sender) {
                 ReplicationRemote.send(Packet).to(Player)
             }

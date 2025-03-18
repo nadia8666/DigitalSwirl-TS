@@ -1,5 +1,6 @@
 import ReactRoblox from "@rbxts/react-roblox";
 import { _UI_Debugger } from "shared/ui/debugging/debugger";
+import { Players } from "@rbxts/services";
 
 export class UIMain {
     public Domain
@@ -7,7 +8,7 @@ export class UIMain {
     public Debugger
 
     constructor() {
-        this.Domain = new Instance("ScreenGui", game.GetService("Players").LocalPlayer.WaitForChild("PlayerGui"))
+        this.Domain = new Instance("ScreenGui", Players.LocalPlayer.WaitForChild("PlayerGui"))
         this.Domain.Name = "Main"
         this.Domain.IgnoreGuiInset = true
         this.Domain.ResetOnSpawn = false
@@ -17,5 +18,7 @@ export class UIMain {
         this.Debugger = new _UI_Debugger()
 
         this.Root.render(this.Debugger.Root)
+
+        print("Rendering ui")
     }
 }

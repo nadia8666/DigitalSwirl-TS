@@ -1,3 +1,4 @@
+import { RunService } from "@rbxts/services"
 import { AddLog } from "./logger"
 
 export const List = new Map<string, Callback>
@@ -10,12 +11,12 @@ export function RegisterStepped(Name:string, Value:number, Callback:Callback) {
     }
 
     List.set(Name, Callback)
-    game.GetService("RunService").BindToRenderStep(Name, Value, Callback)
+    RunService.BindToRenderStep(Name, Value, Callback)
 }
 
 export function UnregisterStepped(Name:string) { 
     List.delete(Name)
-    game.GetService("RunService").UnbindFromRenderStep(Name)
+    RunService.UnbindFromRenderStep(Name)
 }
 
 export function UnregisterAll() {

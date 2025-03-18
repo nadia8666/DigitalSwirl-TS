@@ -1,5 +1,6 @@
 import * as Render from "shared/common/renderregistry"
 import { Player } from ".."
+import { Players, UserInputService } from "@rbxts/services"
 
 const MouseSensitivity = new Vector2(1, 0.77).mul(math.rad(0.5))
 const PitchMax = 85
@@ -18,11 +19,11 @@ export class Camera {
         this.Player = Player
         this.InputVector = Vector3.xAxis
 
-        this.InputChanged = game.GetService("UserInputService").InputChanged.Connect((Input, Processed) => {
+        this.InputChanged = UserInputService.InputChanged.Connect((Input, Processed) => {
             if (Processed) { return }
 
             if (Input.UserInputType === Enum.UserInputType.MouseWheel) {
-                this.Zoom = math.clamp(this.Zoom - (Input.Position.Z * 4), game.GetService("Players").LocalPlayer.CameraMinZoomDistance, game.GetService("Players").LocalPlayer.CameraMaxZoomDistance)
+                this.Zoom = math.clamp(this.Zoom - (Input.Position.Z * 4), Players.LocalPlayer.CameraMinZoomDistance, Players.LocalPlayer.CameraMaxZoomDistance)
             }
         })
     }
@@ -33,7 +34,7 @@ export class Camera {
         
         let JoyLeft = Vector3.zero; let JoyRight = Vector2.zero
         
-        const GPState = game.GetService("UserInputService").GetGamepadState(Enum.UserInputType.Gamepad1)
+        const GPState = UserInputService.GetGamepadState(Enum.UserInputType.Gamepad1)
         GPState.forEach((Value)=>{
             if (Value.KeyCode === Enum.KeyCode.Thumbstick1) {
                 JoyLeft = Value.Position
@@ -43,12 +44,12 @@ export class Camera {
         })
         
         const RotatingCamera = 
-        (game.GetService("UserInputService").IsMouseButtonPressed(Enum.UserInputType.MouseButton2) && game.GetService("UserInputService").GetMouseDelta().Magnitude > 0) 
+        (UserInputService.IsMouseButtonPressed(Enum.UserInputType.MouseButton2) && UserInputService.GetMouseDelta().Magnitude > 0) 
         || 
         JoyRight.Magnitude > .15 //TODO: DEADZONE
         
         if (RotatingCamera) {
-            let CamDelta = game.GetService("UserInputService").GetMouseDelta()
+            let CamDelta = UserInputService.GetMouseDelta()
             if (JoyRight.Magnitude > .15) {
                 const CamSens = UserSettings().GetService("UserGameSettings").MouseSensitivity
 

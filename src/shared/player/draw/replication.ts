@@ -1,3 +1,4 @@
+import { Players } from "@rbxts/services"
 import Net, { Route } from "@rbxts/yetanothernet"
 import * as Routes from "shared/common/replication/routes"
 
@@ -46,7 +47,7 @@ export class PlayerReplicator {
     }
 
     public AddPeer(Data:Routes.ConnectDisconnectPacket) {
-        const TargetPlayer = game.GetService("Players").WaitForChild(Data.Peer, 15)
+        const TargetPlayer = Players.WaitForChild(Data.Peer, 15)
 
         if (TargetPlayer === undefined || !classIs(TargetPlayer, "Player")) { return }
 

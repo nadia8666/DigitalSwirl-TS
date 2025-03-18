@@ -1,26 +1,18 @@
 import React from "@rbxts/react";
-import { ComponentWindow } from "../component/component_window";
-import { ComponentStyledTextLabel } from "../component/component_styledlabel";
-import { ComponentBase } from "../component/component_styledbase";
 import { ComponentProperties } from "../component/properties";
+import { ComponentStyledWindow } from "../component/component_styledwindow";
 export const WindowConfig = {
-    Title: "Example"
+    Title: "Example",
+    TextSize: 15,
+    TextScaled: true,
 }
 
 export class _UI_Window {
     public Root
 
-    constructor(Config: typeof WindowConfig & ComponentProperties<Frame>) {
-        this.Root = <ComponentWindow>
-            <ComponentBase Size={Config.Size || new UDim2(1, 0, 0, 25)} Position={Config.Position || new UDim2(.5, 0, 0, 0)} AnchorPoint={Config.AnchorPoint || new Vector2(.5, 0)}>
-                <ComponentStyledTextLabel Text={Config.Title}>
-
-                </ComponentStyledTextLabel>
-            </ComponentBase>
-
-            <frame>
-
-            </frame>
-        </ComponentWindow>
+    constructor(Config: Partial<typeof WindowConfig> & ComponentProperties<Frame>) {
+        this.Root = <ComponentStyledWindow Title={Config.Title} TextScaled={Config.TextScaled} TextSize={Config.TextSize}>
+            {Config.children}
+        </ComponentStyledWindow>
     }
 }

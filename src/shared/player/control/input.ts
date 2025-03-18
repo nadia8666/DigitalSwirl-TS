@@ -2,6 +2,7 @@ import { Player } from "..";
 import { ButtonState } from "./buttonstate";
 import * as VUtil from "shared/common/vutil";
 import * as CFUtil from "shared/common/cfutil";
+import { UserInputService } from "@rbxts/services";
 
 export class Input {
     public Button
@@ -37,8 +38,8 @@ export class Input {
     }
 
     public Update() {
-        const KeyboardState = game.GetService("UserInputService").GetKeysPressed()
-        const ControllerState = game.GetService("UserInputService").GetGamepadState(Enum.UserInputType.Gamepad1)
+        const KeyboardState = UserInputService.GetKeysPressed()
+        const ControllerState = UserInputService.GetGamepadState(Enum.UserInputType.Gamepad1)
         const MobileState:InputObject[] = [] // TODO: automatically create mobile buttons and match them to keycodes
 
         let KeyList:string[] = []
@@ -70,10 +71,10 @@ export class Input {
         let CStickX = 0
         let CStickY = 0
         
-        PCStickX += game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.A) && -1 || 0
-        PCStickX += game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.D) && 1 || 0
-        PCStickY -= game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.W) && 1 || 0
-        PCStickY -= game.GetService("UserInputService").IsKeyDown(Enum.KeyCode.S) && -1 || 0
+        PCStickX += UserInputService.IsKeyDown(Enum.KeyCode.A) && -1 || 0
+        PCStickX += UserInputService.IsKeyDown(Enum.KeyCode.D) && 1 || 0
+        PCStickY -= UserInputService.IsKeyDown(Enum.KeyCode.W) && 1 || 0
+        PCStickY -= UserInputService.IsKeyDown(Enum.KeyCode.S) && -1 || 0
 
         ControllerState.forEach((Key) => {
             if (Key.KeyCode === Enum.KeyCode.Thumbstick1) {
