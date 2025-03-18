@@ -17,7 +17,6 @@ export class StateRoll extends StateBase {
     protected AfterUpdateHook(Player:Player) {
         PhysicsHandler.ApplyGravity(Player) 
         PhysicsHandler.Turn(Player, Player.Input.GetTurn(Player), undefined)
-        //PhysicsHandler.AccelerateGrounded(Player)
 
         if (Player.Flags.Grounded) {
             Player.Animation.Current = "Roll"
