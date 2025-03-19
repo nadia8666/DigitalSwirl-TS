@@ -19,7 +19,7 @@ export class Peer {
 
     public Update(Data:Routes.UpdateData) {
         for (const [Index, Value] of pairs(Data)) {
-            this[`${Index}`] = (Value as unknown as CFrame & Vector3)
+            this[`${Index}`] = (Value as CFrame & Vector3)
         }
     }
 
