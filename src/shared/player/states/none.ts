@@ -2,6 +2,8 @@ import { Player } from "..";
 import { StateBase } from "./base";
 
 /**
+ * State which does not apply any collision or physics objects
+ * 
  * @class
  * @augments StateBase
  */
@@ -11,10 +13,10 @@ export class StateNone extends StateBase {
     }
 
     protected CheckInput(Player:Player) {
-        
+        return true
     }
 
-    protected AfterUpdateHook(Player:Player) {
-        
+    protected BeforeUpdateHook(Player: Player) {
+        return true
     }
 }

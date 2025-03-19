@@ -58,7 +58,7 @@ export class StateBase {
      * @param Player Player
      * @returns {true|undefined} If returned true will cancel the tick, skipping Collision, AfterUpdateHook, and Animate
      */
-    protected BeforeUpdateHook(Player:Player) {
+    protected BeforeUpdateHook(Player:Player):boolean|undefined|void {
     }
 
     /**
