@@ -20,11 +20,13 @@ export class Input {
             Jump: new ButtonState(),
             Spindash: new ButtonState(),
             Roll: new ButtonState(),
+            Bounce: new ButtonState(),
         }
 
         this.BindKeyCode(this.Button.Jump, [Enum.KeyCode.Space, Enum.KeyCode.ButtonA])
         this.BindKeyCode(this.Button.Spindash, [Enum.KeyCode.E, Enum.KeyCode.LeftShift, Enum.KeyCode.ButtonX, Enum.KeyCode.ButtonB])
         this.BindKeyCode(this.Button.Roll, [Enum.KeyCode.E, Enum.KeyCode.LeftShift, Enum.KeyCode.ButtonX, Enum.KeyCode.ButtonB])
+        this.BindKeyCode(this.Button.Bounce, [Enum.KeyCode.E, Enum.KeyCode.LeftShift, Enum.KeyCode.ButtonX, Enum.KeyCode.ButtonB])
 
         this.PlatformContext = "PC" // assume pc by default
         this.ControllerContext = "Xbox"

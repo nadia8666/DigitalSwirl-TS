@@ -13,55 +13,36 @@ import { Animation } from "./draw/animation"
  * @class
  */
 export class DefaultFlags {
-    public Grounded
-    public LastUp
+    public Grounded = false
+    public LastUp = Vector3.yAxis
     
-    public Floor:BasePart|undefined
-    public FloorLast:CFrame|undefined
-    public FloorOffset:CFrame|undefined
-    public FloorSpeed
+    public Floor:BasePart|undefined = undefined
+    public FloorLast:CFrame|undefined = undefined
+    public FloorOffset:CFrame|undefined = undefined
+    public FloorSpeed = new Vector3(0, 0, 0)
 
     /**
      * Dot product between `Player.Angle` and `Player.Flags.Gravity`
      */
-    public GroundRelative
+    public GroundRelative = -1
 
     /**
      * Does not control the `JumpBall` or `Roll`, view `Player.EnterBall` for more info
      */
-    public BallEnabled
-    public TrailEnabled
+    public BallEnabled = false
+    public TrailEnabled = false
 
+    
+    public Gravity = new Vector3(0, -1, 0)
+    
+    // Moves
     /**
      * Timer to reduce gravity while holding `Player.Input.Button.Jump` 
      */
-    public JumpTimer
-
-    public Gravity:Vector3
-    
-    // Moves
-    public SpindashSpeed
-
-    constructor() {
-        this.Grounded = false
-        this.LastUp = Vector3.yAxis
-
-        this.Floor = undefined
-        this.FloorLast = undefined
-        this.FloorOffset = undefined
-        this.FloorSpeed = Vector3.zero
-        this.GroundRelative = -1
-
-        this.BallEnabled = false
-        this.TrailEnabled = false
-        
-        this.JumpTimer = 0
-
-        this.Gravity = new Vector3(0, -1, 0)
-        
-        // Moves
-        this.SpindashSpeed = 0
-    }
+    public JumpTimer = 0
+    public SpindashSpeed = 0
+    public Bounces = 0
+    public IsBounce = false
 }
 
 let PreviousAngle:CFrame|undefined
@@ -216,5 +197,7 @@ export class Player {
      */
     public Land() {
         this.ExitBall()
+        this.Flags.Bounces = 0
+        this.Flags.IsBounce = false
     }
 }
