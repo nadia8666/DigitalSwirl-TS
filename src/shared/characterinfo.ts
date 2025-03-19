@@ -20,6 +20,7 @@ export let CharacterInfo = {
         // TODO: fix
         JogSpeed: .46,
         RunSpeed: 1.39,
+		RollGetup: 1.39, // Point at which the roll state should uncurl you
         RushSpeed: 2.3,
         DashSpeed: 5.09,
 
@@ -31,6 +32,9 @@ export let CharacterInfo = {
         JumpTicks: 60,
 
         StandardDeceleration: -.06,
+
+		SkidFriction: -.18,
+		GroundFriction: new Vector3(-.1, 0, -.6),
 
         AirResist: new Vector3(-.008, -.01, -.4),
 
@@ -53,6 +57,10 @@ export let CharacterInfo = {
 		},
 		Fall: {
 			[0]: { id: "106824283599126", asset: BaseAnimation }
+		},
+		Skid: {
+			[0]: { id: "99388608469800", asset: BaseAnimation },
+			end_anim: "Idle",
 		},
 		Run: {
 			[0]: {

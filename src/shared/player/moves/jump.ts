@@ -10,5 +10,7 @@ export function CheckJump(Player:Player) {
         
         Player.EnterBall()
         Player.Animation.Current = "Roll"
+
+        return true
     }
 }

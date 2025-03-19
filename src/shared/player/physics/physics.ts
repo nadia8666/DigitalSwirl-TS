@@ -170,7 +170,6 @@ export const PhysicsHandler = {
 
     // Movement
     // TOOD: port https://github.com/SonicOnset/DigitalSwirl-Client/blob/master/ControlScript/Player/Movement.lua
-    
     AlignToGravity: (Player:Player) => {
         if (/*Player.Speed.magnitude < Player.p.dash_speed*/ true /*TODO: this*/) {
             //Remember previous speed
@@ -193,6 +192,37 @@ export const PhysicsHandler = {
             //Keep using previous speed
             Player.Speed = Player.ToLocal(prev_spd)
         }
+    },
+    Skid: (Player:Player) => {
+        const FrictionMultiplier = 1 // TODO: fricton mult
+        const SpeedMultiplier = FrameworkState.SpeedMultiplier
+
+        
+        // TODO: see if sm is required here
+        const XFriction = Player.Physics.SkidFriction * FrictionMultiplier * SpeedMultiplier
+        const ZFriction = Player.Physics.GroundFriction.Z * FrictionMultiplier * SpeedMultiplier
+        
+        Player.Speed = Player.Speed.add(Player.Speed.mul(Player.Physics.AirResist)).add(new Vector3(PhysicsHandler.GetDecel(Player.Speed.X, XFriction), 0, PhysicsHandler.GetDecel(Player.Speed.Z, ZFriction)))
+    },
+    RollInertia: (Player:Player) => {
+        // TODO: see if i can seperate the gravity from this
+        const Weight = Player.Physics.Weight
+        let Acceleration = Player.ToLocal(Player.Flags.Gravity.mul(Weight))
+
+        if (Player.Flags.Grounded && Player.Speed.X > Player.Physics.RunSpeed && Player.Flags.GroundRelative < 0) {
+            // TODO: make dynamic
+            Acceleration = Acceleration.mul(new Vector3(1, -8, 1))
+        }
+
+        if (Player.Flags.BallEnabled && Player.Flags.GroundRelative < .98) {
+            Acceleration = Acceleration.add(new Vector3(Player.Speed.X * -.0002, 0, 0))
+        } else {
+            Acceleration = Acceleration.add(new Vector3(Player.Speed.X * Player.Physics.AirResist.X, 0, 0))
+        }
+
+        Acceleration = Acceleration.add(new Vector3(0, Player.Speed.Y, Player.Speed.Z).mul(Player.Physics.AirResist.Z))
+
+        Player.Speed = Player.Speed.add(Acceleration)
     },
     
     // Turning
