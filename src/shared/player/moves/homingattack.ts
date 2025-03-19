@@ -1,5 +1,10 @@
 import { Player } from "..";
 
+/**
+ * Function ran in `State.CheckInput`
+ * @param Player 
+ * @returns Move successful
+ */
 export function CheckHomingAttack(Player:Player) {
     if (Player.Input.Button.Jump.Pressed && Player.Flags.BallEnabled) {
         // TODO: homing attack

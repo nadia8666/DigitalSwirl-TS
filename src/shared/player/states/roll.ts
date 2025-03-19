@@ -3,6 +3,10 @@ import { CheckJump } from "../moves/jump";
 import { IntertiaState, PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
+/**
+ * @class
+ * @augments StateBase
+ */
 export class StateRoll extends StateBase {
     constructor() {
         super()

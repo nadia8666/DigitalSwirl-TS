@@ -10,6 +10,10 @@ export enum IntertiaState {
 
 export const PhysicsHandler = {
     // Acceleration
+    /**
+     * Apply grounded acceleration, gravity calculations are separate
+     * @param Player 
+     */
     AccelerateGrounded: (Player:Player) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
 
@@ -120,7 +124,13 @@ export const PhysicsHandler = {
         //Apply acceleration
         Player.Speed = Player.Speed.add(Acceleration)
     },
+    
+    /**
+     * Apply airborne acceleration, gravity calculations are separate
+     * @param Player 
+     */
     AccelerateAirborne: (Player:Player) => {
+        // TODO:
         PhysicsHandler.AccelerateGrounded(Player)
 
         if /*(self.rail_trick > 0) ||*/ (Player.Flags.JumpTimer > 0 && Player.Flags.BallEnabled && Player.Input.Button.Jump.Activated) {
@@ -193,6 +203,12 @@ export const PhysicsHandler = {
             Player.Speed = Player.ToLocal(prev_spd)
         }
     },
+    /**
+     * Slowdown function to emulate skidding
+     * 
+     * Used in `Skid` and `Spindash`
+     * @param Player 
+     */
     Skid: (Player:Player) => {
         const FrictionMultiplier = 1 // TODO: fricton mult
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
@@ -204,6 +220,11 @@ export const PhysicsHandler = {
         
         Player.Speed = Player.Speed.add(Player.Speed.mul(Player.Physics.AirResist)).add(new Vector3(PhysicsHandler.GetDecel(Player.Speed.X, XFriction), 0, PhysicsHandler.GetDecel(Player.Speed.Z, ZFriction)))
     },
+
+    /**
+     * Replacement function for `AccelerateGrounded` and `AccelerateAirborne` for the `Roll` state, disables acceleration and keeps speed
+     * @param Player 
+     */
     RollInertia: (Player:Player) => {
         // TODO: see if i can seperate the gravity from this
         const Weight = Player.Physics.Weight
@@ -226,10 +247,30 @@ export const PhysicsHandler = {
     },
     
     // Turning
+    /**
+     * Raw turning function used in the main Player.Turn function, will directly rotate the Players Y axis
+     * 
+     * Do not use over Player.Turn unless you want a snap turn!
+     * @param Player 
+     * @param Turn Amount in radians to turn
+     */
     TurnRaw: (Player:Player, Turn:number) => {
         Player.Angle = Player.Angle.mul(CFrame.Angles(0, Turn, 0))
     },
 
+    /**
+     * Turning function, limits max angle to smooth out turns, use over `TurnRaw`
+     * 
+     * `IState` Options:
+     * 
+     *      undefined - Regular turning, variable max turn
+     *      InertiaState.FULL_INERTIA - Max turning limited to 45, turns with 100% inertia
+     *      InertiaState.GROUND_NOFRICT - Similar to undefined calculations, but assumes grounded & ignores low friction
+     * 
+     * @param Player 
+     * @param Turn Amount in radians to turn
+     * @param IState Inertia configs to match Digital Swirl
+     */
     Turn: (Player:Player, Turn:number, IState:IntertiaState|undefined) => {
         const SpeedMultiplier = FrameworkState.SpeedMultiplier
 
@@ -305,6 +346,13 @@ export const PhysicsHandler = {
 
     },
 
+    /**
+     * Deceleration calculation
+     * 
+     * @param Speed Number to decelerate
+     * @param Deceleration Maximum deceleration rate
+     * @returns Applied deceleration speed
+     */
     GetDecel(Speed:number, Deceleration:number) {
         if (Speed > 0) {
             return -math.min(Speed, -Deceleration)

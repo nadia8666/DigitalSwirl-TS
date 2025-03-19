@@ -1,5 +1,10 @@
 import { Player } from "..";
 
+/**
+ * Function ran in `State.CheckInput`
+ * @param Player 
+ * @returns Move successful
+ */
 export function CheckJump(Player:Player) {
     if (Player.Input.Button.Jump.Pressed) {
         Player.State.Current = Player.State.Get("Airborne")

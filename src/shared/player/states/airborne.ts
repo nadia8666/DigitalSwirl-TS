@@ -3,6 +3,10 @@ import { CheckHomingAttack } from "../moves/homingattack";
 import { PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
+/**
+ * @class
+ * @augments StateBase
+ */
 export class StateAirborne extends StateBase {
     constructor() {
         super()

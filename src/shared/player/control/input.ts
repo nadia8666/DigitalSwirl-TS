@@ -6,6 +6,9 @@ import { UserInputService } from "@rbxts/services";
 
 type ButtonUnion = ExtractKeys<Input["Button"], ButtonState>
 
+/**
+ * @class
+ */
 export class Input {
     public Button
     public PlatformContext:string
@@ -28,12 +31,17 @@ export class Input {
         this.Stick = Vector2.zero
     }
 
-    public BindKeyCode(Input:ButtonState, KeyCode:Enum.KeyCode[]) {
+    private BindKeyCode(Input:ButtonState, KeyCode:Enum.KeyCode[]) {
         KeyCode.forEach((Key) => {
             Input.KeyCodes.push(Key)
         })
     }
 
+    /**
+     * Translates a KeyCode to a list of all binded `Input.Button`s
+     * @param Key KeyCode
+     * @returns List of all k
+     */
     public KeyCodeToButton(Key:Enum.KeyCode) {
         const List:ButtonUnion[] = []
         for (const [Index , Button] of pairs(this.Button)) {
@@ -46,6 +54,9 @@ export class Input {
         return List
     }
 
+    /**
+     * Update input
+     */
     public Update() {
         const KeyboardState = UserInputService.GetKeysPressed()
         const ControllerState = UserInputService.GetGamepadState(Enum.UserInputType.Gamepad1)
@@ -104,6 +115,11 @@ export class Input {
         // TODO: Update platform & controller context
     }
 
+    /**
+     * Convert input angle to turn value
+     * @param Player 
+     * @returns Current turn value
+     */
     public GetTurn(Player:Player) {
         if (!game.Workspace.CurrentCamera || this.Stick.Magnitude === 0) { return 0 }
 
@@ -142,6 +158,11 @@ export class Input {
 		return turn
     }
 
+    /**
+     * Get all input information
+     * @param Player 
+     * @returns Tuple: {HasControl, StickMagnitude, PlayerTurn}
+     */
     public Get(Player:Player) {
         // has_control, stick_mag, last_turn
         // TODO: has_control

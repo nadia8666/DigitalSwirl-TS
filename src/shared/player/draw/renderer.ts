@@ -1,5 +1,9 @@
 import { Player } from "..";
 
+/**
+ * Player renderer
+ * @class
+ */
 export class Renderer {
     private Player:Player
 
@@ -7,7 +11,11 @@ export class Renderer {
         this.Player = Player
     }
 
-    public Draw() {
+    /**
+     * Draw player, should only execute at the end of each `RenderStepped`
+     * @returns {undefined}
+     */
+    public Draw(): undefined {
         const Root = this.Player.Character.PrimaryPart
         if (!Root || !Root.IsA("BasePart")) { return }
 

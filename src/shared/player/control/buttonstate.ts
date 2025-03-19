@@ -1,3 +1,6 @@
+/**
+ * @class
+ */
 export class ButtonState {
     public Pressed
     public Activated
@@ -11,6 +14,10 @@ export class ButtonState {
         this.KeyCodes = []
     }
 
+    /**
+     * Updaet button state
+     * @param Activated 
+     */
     public Update(Activated:boolean) {
         this.Activated = Activated
 

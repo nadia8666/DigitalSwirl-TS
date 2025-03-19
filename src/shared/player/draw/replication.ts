@@ -2,6 +2,12 @@ import { Players } from "@rbxts/services"
 import Net, { Route } from "@rbxts/yetanothernet"
 import * as Routes from "shared/common/replication/routes"
 
+// TODO: jsdoc
+
+/**
+ * Replication peer
+ * @class
+ */
 export class Peer {
     public Position:Vector3
     public Angle:CFrame
@@ -12,9 +18,9 @@ export class Peer {
     }
 
     public Update(Data:Routes.UpdateData) {
-        // TODO: find a better way to do this
-        this.Position = Data.Position
-        this.Angle = Data.Angle
+        for (const [Index, Value] of pairs(Data)) {
+            this[`${Index}`] = (Value as unknown as CFrame & Vector3)
+        }
     }
 
     public Destroy() {
@@ -22,6 +28,10 @@ export class Peer {
     }
 }
 
+/**
+ * Replicator
+ * @class
+ */
 export class PlayerReplicator {
     public ReplicationRemote:Route<Routes.UpdateRoute>
     public Peers:Map<string,Peer>//Array<Peer>

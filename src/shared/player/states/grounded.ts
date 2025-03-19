@@ -5,6 +5,10 @@ import { CheckSpindash } from "../moves/spindash";
 import { IntertiaState, PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
+/**
+ * @class
+ * @augments StateBase
+ */
 export class StateGrounded extends StateBase {
     constructor() {
         super()

@@ -3,6 +3,10 @@ import { CheckStopSkid } from "../moves/skid";
 import { PhysicsHandler } from "../physics/physics";
 import { StateBase } from "./base";
 
+/**
+ * @class
+ * @augments StateBase
+ */
 export class StateSkid extends StateBase {
     constructor() {
         super()

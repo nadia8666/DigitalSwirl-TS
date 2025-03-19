@@ -14,6 +14,10 @@ for (const [Key, State] of pairs(new StateList)) {
     MainMap.set(Index, State)
 }
 
+/**
+ * State machine
+ * @class
+ */
 export class StateMachine {
     private Player: Player
     private NextTick: number
@@ -32,14 +36,20 @@ export class StateMachine {
         this.Current = this.Get("Airborne")
     };
 
+    /**
+     * Internal method for ticking the current state
+     */
     private TickState() {
         this.Current.CheckMoves(this.Player)
 
         this.Current.Tick(this.Player)
     };
-
+    
+    /**
+     * Update the state machine, **only run this if you know what you're doing!**
+     */
     public Update() {
-        // generic fixed update loop
+        // Generic fixed update loop
         while (os.clock() > this.NextTick) {
             this.TickState()
 
@@ -47,10 +57,12 @@ export class StateMachine {
         }
     };
 
-    /*
-        Hello
-        @param Index how do you function doc again
-    */
+    /**
+     * 
+     * @param Index State to change to
+     * @returns Found PlayerState
+     * @throws If invalid state is searched for
+     */
     public Get(Index: StatesUnion):PlayerState {
         const Pick = this.List.get(Index)
 

@@ -8,6 +8,10 @@ import { CharacterInfo } from "shared/characterinfo"
 import { UIMain } from "./ui"
 import { Animation } from "./draw/animation"
 
+/**
+ * Flags list
+ * @class
+ */
 export class DefaultFlags {
     public Grounded
     public LastUp
@@ -16,11 +20,21 @@ export class DefaultFlags {
     public FloorLast:CFrame|undefined
     public FloorOffset:CFrame|undefined
     public FloorSpeed
+
+    /**
+     * Dot product between `Player.Angle` and `Player.Flags.Gravity`
+     */
     public GroundRelative
 
+    /**
+     * Does not control the `JumpBall` or `Roll`, view `Player.EnterBall` for more info
+     */
     public BallEnabled
     public TrailEnabled
 
+    /**
+     * Timer to reduce gravity while holding `Player.Input.Button.Jump` 
+     */
     public JumpTimer
 
     public Gravity:Vector3
@@ -52,27 +66,31 @@ export class DefaultFlags {
 
 let PreviousAngle:CFrame|undefined
 
+/**
+ * Player
+ * @class
+ */
 export class Player {
     // Main
-    public Character: Model
+    public readonly Character: Model
     public Position: Vector3
     public Speed: Vector3
     public Angle: CFrame
     
-    // Character info
-    public Physics
-    public Animations
-
     // Flags
     public Flags:DefaultFlags
+    
+    // Character info
+    public readonly Physics
+    public readonly Animations
 
     // Modules
     public readonly State: StateMachine
-    public Camera: Camera
+    public readonly Camera: Camera
     public readonly Animation: Animation
-    public Renderer: Renderer
-    public Input: Input
-    public UI: UIMain
+    public readonly Renderer: Renderer
+    public readonly Input: Input
+    public readonly UI: UIMain
 
     constructor(Character: Model) {
         this.Character = Character
@@ -99,10 +117,16 @@ export class Player {
         AddLog(`Loaded new player ${Character}`)
     }
 
+    /**
+     * Destroys the Player
+     */
     public Destroy() {
 
     }
 
+    /**
+     * Update player once per frame, **do not run this method if you do not know what you're doing!**
+     */
     public Update() {
         // Angle
         if (PreviousAngle !== this.Angle) {
@@ -117,36 +141,79 @@ export class Player {
     }
 
     // Utility functions
+    /**
+     * Returns the players current CFrame
+     * @returns {CFrame}
+     */
     public GetAngle() {
         return this.Angle.add(this.Position)
     }
 
+    /**
+     * Convert a vector into a local space vector centered on the Player's {0,0,0}
+     * 
+     * Mainly used for Player.Speed
+     * @param Vector Vector to convert
+     * @returns Local vector
+     */
     public ToLocal(Vector:Vector3) {
         return (this.GetAngle().mul(CFrame.Angles(0, math.rad(90), 0))).VectorToObjectSpace(Vector)
     }
 
+    /**
+     * Inverse of Player.ToLocal, converts a vector from player local space to world space
+     * 
+     * Mainly used for Player.Speed
+     * @param Vector Vector to convert
+     * @returns Global vector
+     */
     public ToGlobal(Vector:Vector3) {
         return (this.GetAngle().mul(CFrame.Angles(0, math.rad(90), 0))).VectorToWorldSpace(Vector)
     }
 
+    /**
+     * Get the scripted center of the player
+     * @returns Player center position
+     */
     public GetMiddle() {
         return this.Position.add(this.Angle.UpVector.mul(this.Physics.Height * this.Physics.Scale))
     }
 
+    /**
+     * !! THIS METHOD IS AUTOMATICALLY RAN ON PLAYER.ANGLE CHANGE !!
+     * 
+     * 
+     * Updates Player.Flags.GroundRelative (Dot product of Player.Angle and Player.Flags.Gravity)
+     */
     public SetGroundRelative() {
         this.Flags.GroundRelative = this.Angle.UpVector.mul(-1).Dot(this.Flags.Gravity.Unit)
     }
 
+    /**
+     * Forces player into ball
+     * 
+     * This does **NOT** control the `Roll` **OR** the `JumpBall`:
+     * 
+     * `Player.Animation.Current = "Roll"` will set you to `Roll`
+     * 
+     * `JumpBall` will be automatically triggered if Animation is `Roll` `and Player.Flags.TrailEnabled === true`
+     */
     public EnterBall() {
         this.Flags.TrailEnabled = false
         this.Flags.BallEnabled = true
     }
 
+    /**
+     * Exits the Players current ball, check Player.EnterBall for `Roll`/`JumpBall` rules
+     */
     public ExitBall() {
         this.Flags.TrailEnabled = false
         this.Flags.BallEnabled = false
     }
 
+    /**
+     * Helper method to cleanup all air-specific actions, run this when landed
+     */
     public Land() {
         this.ExitBall()
     }

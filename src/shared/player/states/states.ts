@@ -8,6 +8,10 @@ import { StateSkid } from "./skid";
 
 export type PlayerState = StateBase
 
+/**
+ * List of all states for `StateMachine`
+ * @class
+ */
 export class StateList {
     // Physical states
     private Base = new StateBase

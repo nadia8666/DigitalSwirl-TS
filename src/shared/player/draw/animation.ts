@@ -2,6 +2,9 @@ import { deepCopy as DeepCopy } from "@rbxts/deepcopy";
 import { Player } from "..";
 import { AnimationList, InferredAnimation } from "shared/characterinfo";
 
+/**
+ * @class
+ */
 export class Animation {
     public Animations
     public Current:keyof AnimationList
@@ -18,8 +21,12 @@ export class Animation {
         this.LoadAnimations(Player)
     }
 
+    /**
+     * Load all animations from `Player.Animations` and load events
+     * @param Player
+     */
     public LoadAnimations(Player:Player) {
-        const AnimationController:Animator = (Player.Character.WaitForChild("Humanoid").WaitForChild("Animator") as Animator) // TODO: make animct
+        const AnimationController:Animator = (Player.Character.WaitForChild("Humanoid").WaitForChild("Animator") as Animator) // TODO: make animationcontroller.animator
         for (const [_, AnimationInfo] of pairs(this.Animations)) {
             for (const [Key, Value] of pairs(AnimationInfo)) {
                 if (typeOf(Key) === "number") {
@@ -32,18 +39,31 @@ export class Animation {
         }
     }
 
+    /**
+     * TODO: this
+     */
     public UnloadAnimations() {
 
     }
 
-    public UpdateState(Animation: InferredAnimation, Playing:boolean) {
+    /**
+     * Do not run
+     * @param Animation
+     * @param Playing
+     */
+    private UpdateState(Animation: InferredAnimation, Playing:boolean) {
         for (const [Key, Value] of pairs(Animation)) {
             if (typeOf(Key) !== "number") { continue }
             Value.asset[Playing && "Play" || "Stop"]()
         }
     }
 
-    public UpdateCurrent(Player:Player, Animation: InferredAnimation) {
+    /**
+     * Do not run
+     * @param Player
+     * @param Animation 
+     */
+    private UpdateCurrent(Player:Player, Animation: InferredAnimation) {
         for (const [Key, Value] of pairs(Animation)) {
             if (typeOf(Key) !== "number") { continue }
             
@@ -63,6 +83,10 @@ export class Animation {
         }
     }
 
+    /**
+     * Change current Players animation and update
+     * @param Player 
+     */
     public Animate(Player:Player) {
         const Previous = (this.Animations[this.Last] as InferredAnimation)
         const Next = (this.Animations[this.Current] as InferredAnimation)

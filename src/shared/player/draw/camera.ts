@@ -5,6 +5,9 @@ import { Players, UserInputService } from "@rbxts/services"
 const MouseSensitivity = new Vector2(1, 0.77).mul(math.rad(0.5))
 const PitchMax = 85
 
+/**
+ * @class
+ */
 export class Camera {
     private Player:Player
     public InputChanged:RBXScriptConnection
@@ -28,6 +31,11 @@ export class Camera {
         })
     }
 
+    /**
+     * Update `Camera`
+     * @param Delta DeltaTime
+     * @returns 
+     */
     public Update(Delta:number) {
         if (!game.Workspace.CurrentCamera) { return }
         if (game.Workspace.CurrentCamera.CameraType === Enum.CameraType.Scriptable) { return }
@@ -76,6 +84,9 @@ export class Camera {
         this.InputVector = FinalCFrame.LookVector
     }
 
+    /**
+     * Destroy `Camera`
+     */
     public Destroy() {
         this.InputChanged.Disconnect()
 

@@ -140,6 +140,10 @@ function WallCollide(Player:Player, Whitelist:Instance[], Y:number, Direction:Ve
 	return ShouldMove
 }
 
+/**
+ * Run global collision for `Player`
+ * @param Player
+ */
 export function RunCollision(Player:Player) {
     const SpeedMultiplier = FrameworkState.SpeedMultiplier
 
