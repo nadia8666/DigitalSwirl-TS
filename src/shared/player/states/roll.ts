@@ -9,13 +9,19 @@ export class StateRoll extends StateBase {
     }
 
     protected CheckInput(Player:Player) {
-        if (!Player.Input.Button.Roll.Pressed) {
+        if (Player.Input.Button.Roll.Pressed || Player.Speed.X < Player.Physics.RollGetup) {
+            // TODO: ceil clip
             Player.State.Current = Player.State.Get("Grounded")
+            Player.ExitBall()
+
+            return true
         }
+
+        return CheckJump(Player)
     }
 
     protected AfterUpdateHook(Player:Player) {
-        PhysicsHandler.ApplyGravity(Player) 
+        PhysicsHandler.RollInertia(Player)
         PhysicsHandler.Turn(Player, Player.Input.GetTurn(Player), undefined)
 
         if (Player.Flags.Grounded) {

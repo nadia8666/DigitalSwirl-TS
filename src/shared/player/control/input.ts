@@ -4,6 +4,8 @@ import * as VUtil from "shared/common/vutil";
 import * as CFUtil from "shared/common/cfutil";
 import { UserInputService } from "@rbxts/services";
 
+type ButtonUnion = ExtractKeys<Input["Button"], ButtonState>
+
 export class Input {
     public Button
     public PlatformContext:string
@@ -33,12 +35,15 @@ export class Input {
     }
 
     public KeyCodeToButton(Key:Enum.KeyCode) {
+        const List:ButtonUnion[] = []
         for (const [Index , Button] of pairs(this.Button)) {
             const Target = Button.KeyCodes.find(Object => Object === Key)
             if (Target) {
-                return Index
+                List.push(Index)
             }
         }
+
+        return List
     }
 
     public Update() {
@@ -51,14 +56,16 @@ export class Input {
         TotalState.forEach((DeviceState) => {
             DeviceState.forEach((Object) => {
                 if (Object.KeyCode === Enum.KeyCode.Unknown || Object.UserInputState !== Enum.UserInputState.Begin) { return }
-                const Key = this.KeyCodeToButton(Object.KeyCode)
-                if (Key) {
-                    if (!KeyList.find(Object => Object === Key)) {
-                        KeyList.push(Key)
-
-                        this.Button[Key].Update(true)
+                const List = this.KeyCodeToButton(Object.KeyCode)
+                List.forEach((Key) => {
+                    if (Key) {
+                        if (!KeyList.find(Object => Object === Key)) {
+                            KeyList.push(Key)
+    
+                            this.Button[Key].Update(true)
+                        }
                     }
-                }
+                })
             })
         })
 

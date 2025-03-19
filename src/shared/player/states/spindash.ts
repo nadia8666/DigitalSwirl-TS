@@ -14,6 +14,9 @@ export class StateSpindash extends StateBase {
                 Player.Flags.SpindashSpeed += .4
             }
         } else {
+            // Release
+            Player.Speed = Player.Speed.mul(new Vector3(0, 1, 1)).add(new Vector3(Player.Flags.SpindashSpeed, 0, 0))
+            Player.EnterBall()
             Player.State.Current = Player.State.Get("Roll")
         }
     }
@@ -21,6 +24,7 @@ export class StateSpindash extends StateBase {
     protected AfterUpdateHook(Player:Player) {
         PhysicsHandler.ApplyGravity(Player) 
         PhysicsHandler.Turn(Player, Player.Input.GetTurn(Player), undefined)
+        PhysicsHandler.Skid(Player)
         //PhysicsHandler.AccelerateGrounded(Player)
 
         if (Player.Flags.Grounded) {
