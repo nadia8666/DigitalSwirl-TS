@@ -1,5 +1,5 @@
 import React from "@rbxts/react";
-import { ComponentProperties } from "./properties";
+import { ComponentProperties } from "../properties";
 
 export function ComponentStyledBase(Properties: ComponentProperties<Frame> & Partial<{ stroke: false | undefined }>) {
     return (

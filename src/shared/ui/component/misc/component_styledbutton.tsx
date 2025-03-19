@@ -1,5 +1,5 @@
 import React from "@rbxts/react";
-import { ComponentProperties } from "./properties";
+import { ComponentProperties } from "../properties";
 import { ComponentStyledTextLabel } from "./component_styledlabel";
 import { ComponentStyledBase } from "./component_styledbase";
 

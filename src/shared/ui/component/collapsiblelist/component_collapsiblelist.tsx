@@ -1,7 +1,7 @@
 import React, { Binding, ReactComponent, useEffect, useState } from "@rbxts/react";
-import { ComponentStyledBase } from "./component_styledbase";
-import { ComponentStyledTextLabel } from "./component_styledlabel";
-import { ComponentProperties } from "./properties";
+import { ComponentStyledBase } from "../misc/component_styledbase";
+import { ComponentStyledTextLabel } from "../misc/component_styledlabel";
+import { ComponentProperties } from "../properties";
 import { useMotion } from "@rbxts/pretty-react-hooks";
 
 function ListContainer(Properties: ComponentProperties<Frame> & { Text: string | Binding<string> | undefined }) {

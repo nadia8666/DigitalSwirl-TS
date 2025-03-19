@@ -1,8 +1,8 @@
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
-import { ComponentCollapsibleList } from "../component/component_collapsiblelist";
-import { ComponentStyledTextLabel } from "../component/component_styledlabel";
-import { ComponentStyledBase } from "../component/component_styledbase";
+import { ComponentCollapsibleList } from "./component_collapsiblelist";
+import { ComponentStyledTextLabel } from "../misc/component_styledlabel";
+import { ComponentStyledBase } from "../misc/component_styledbase";
 
 const _STORY_CollapsibleList = {
     react: React,

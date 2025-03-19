@@ -1,9 +1,9 @@
 import React from "@rbxts/react";
-import { ComponentStyledBase } from "../component/component_styledbase";
-import { ComponentCollapsibleList } from "../component/component_collapsiblelist";
-import { ComponentStyledButton } from "../component/component_styledbutton";
-import { _UI_Window } from "../window/window";
-import { ComponentStyledWindow } from "../component/component_styledwindow";
+import { ComponentStyledBase } from "../component/misc/component_styledbase";
+import { ComponentCollapsibleList } from "../component/collapsiblelist/component_collapsiblelist";
+import { ComponentStyledButton } from "../component/misc/component_styledbutton";
+import { _UI_Window } from "../component/window/window";
+import { ComponentStyledWindow } from "../component/window/component_styledwindow";
 
 export class _UI_Debugger {
     public Root

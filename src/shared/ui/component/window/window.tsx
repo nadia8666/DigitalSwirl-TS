@@ -1,6 +1,6 @@
 import React from "@rbxts/react";
-import { ComponentProperties } from "../component/properties";
-import { ComponentStyledWindow } from "../component/component_styledwindow";
+import { ComponentProperties } from "../properties";
+import { ComponentStyledWindow } from "../window/component_styledwindow";
 export const WindowConfig = {
     Title: "Example",
     TextSize: 15,

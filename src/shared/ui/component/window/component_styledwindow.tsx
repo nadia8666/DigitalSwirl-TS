@@ -1,9 +1,9 @@
 import React from "@rbxts/react";
-import { ComponentStyledBase } from "./component_styledbase";
-import { ComponentStyledTextLabel } from "./component_styledlabel";
+import { ComponentStyledBase } from "../misc/component_styledbase";
+import { ComponentStyledTextLabel } from "../misc/component_styledlabel";
 import { SourceComponentWindow } from "./source_window";
-import { WindowConfig } from "../window/window";
-import { ComponentProperties } from "./properties";
+import { WindowConfig } from "./window";
+import { ComponentProperties } from "../properties";
 
 export function ComponentStyledWindow(Config: Partial<typeof WindowConfig> & ComponentProperties<Frame> & ComponentProperties<TextLabel>) {
     print(Config.TextSize)
