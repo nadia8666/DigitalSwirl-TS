@@ -16,7 +16,7 @@ export class Camera {
     public InputVector:Vector3
 
     constructor(Player:Player) {
-        Render.RegisterStepped("Camera", Enum.RenderPriority.Camera.Value + 1, (Delta:number) => this.Update(Delta))
+        //Render.RegisterStepped("Camera", Enum.RenderPriority.Camera.Value + 1, (Delta:number) => this.Update(Delta))
         this.Rotation = {X: 0, Y: 0, Z: 0}
         this.Zoom = 16
         this.Player = Player
@@ -78,7 +78,7 @@ export class Camera {
         const Rotation = CFrame.Angles(0, this.Rotation.Y , 0).mul(CFrame.Angles(this.Rotation.X, 0, 0))
 
         // TODO: abstract & implement popper
-        const FinalCFrame = new CFrame(this.Player.Position).mul(Rotation).add(new Vector3(0, this.Player.Character.FindFirstChildOfClass("Humanoid")?.HipHeight, 0)).add(Rotation.LookVector.mul(-this.Zoom))
+        const FinalCFrame = new CFrame(this.Player.RenderCFrame.Position).mul(Rotation).add(new Vector3(0, this.Player.Character.FindFirstChildOfClass("Humanoid")?.HipHeight, 0)).add(Rotation.LookVector.mul(-this.Zoom))
 
         if (!Workspace.CurrentCamera) { return }
         Workspace.CurrentCamera.CFrame = FinalCFrame

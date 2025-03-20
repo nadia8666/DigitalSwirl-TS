@@ -18,8 +18,6 @@ export class StateBase {
      * @param Player
      */
     public CheckMoves(Player:Player) {
-        Player.Input.Update()
-        
         // Default input checking code
 
         // Per state code

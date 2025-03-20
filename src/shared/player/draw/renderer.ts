@@ -15,13 +15,13 @@ export class Renderer {
      * Draw player, should only execute at the end of each `RenderStepped`
      * @returns {undefined}
      */
-    public Draw(): undefined {
+    public Draw(DeltaTime:number): undefined {
         const Root = this.Player.Character.PrimaryPart
         if (!Root || !Root.IsA("BasePart")) { return }
 
-        let Position = this.Player.Position
+        let Position = this.Player.RenderCFrame.Position
         Position = Position.add(this.Player.Angle.UpVector.mul((Root.Size.Y/2) + (this.Player.Character.FindFirstChildOfClass("Humanoid")?.HipHeight || 0)))
 
-        this.Player.Character.PivotTo(this.Player.Angle.add(Position))
+        this.Player.Character.PivotTo(this.Player.RenderCFrame.Rotation.add(Position))
     }
 }

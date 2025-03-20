@@ -1,8 +1,9 @@
 import { Constants } from "shared/common/constants"
 import { Player } from "."
 
-import { AddLog } from "shared/common/logger";
-import { PlayerState, StateList } from "./states/states";
+import { AddLog } from "shared/common/logger"
+import { PlayerState, StateList } from "./states/states"
+import { FrameworkState } from "shared/common/frameworkstate"
 
 export type StatesUnion = ExtractKeys<StateList, PlayerState>
 export type StatesList = Map<StatesUnion, PlayerState>
@@ -20,7 +21,7 @@ for (const [Key, State] of pairs(new StateList)) {
  */
 export class StateMachine {
     private Player: Player
-    private NextTick: number
+    public TickTimer: number
     public List: StatesList
     public Current: PlayerState
 
@@ -31,10 +32,10 @@ export class StateMachine {
             this.List.set(Index, Value)
         })
 
-        this.NextTick = os.clock()
+        this.TickTimer = os.clock()
         this.Player = Player
         this.Current = this.Get("Airborne")
-    };
+    }
 
     /**
      * Internal method for ticking the current state
@@ -43,19 +44,24 @@ export class StateMachine {
         this.Current.CheckMoves(this.Player)
 
         this.Current.Tick(this.Player)
-    };
+    }
     
     /**
      * Update the state machine, **only run this if you know what you're doing!**
      */
-    public Update() {
+    public Update(DeltaTime:number) {
         // Generic fixed update loop
-        while (os.clock() > this.NextTick) {
-            this.TickState()
+        this.TickTimer = math.min(this.TickTimer + DeltaTime * (60 * FrameworkState.GameSpeed), 10)
+        while (this.TickTimer > 1) {
+            this.Player.Input.PrepareReset()
 
-            this.NextTick += 1/(Constants.Tickrate)
+            this.TickState()
+            this.TickTimer -= 1
+
+            this.Player.LastCFrame = this.Player.CurrentCFrame
+            this.Player.CurrentCFrame = this.Player.Angle.add(this.Player.Position)
         }
-    };
+    }
 
     /**
      * 

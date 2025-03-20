@@ -4,6 +4,7 @@
 export class ButtonState {
     public Pressed
     public Activated
+    public CanBeUpdated
     private LastActivated
     public KeyCodes: Enum.KeyCode[]
 
@@ -11,6 +12,7 @@ export class ButtonState {
         this.Pressed = false
         this.Activated = false
         this.LastActivated = false
+        this.CanBeUpdated = true
         this.KeyCodes = []
     }
 
@@ -19,8 +21,13 @@ export class ButtonState {
      * @param Activated 
      */
     public Update(Activated:boolean) {
-        this.Activated = Activated
+        if (!this.CanBeUpdated) { return }
 
+        // Register input for lower game speed
+        if (Activated) { this.CanBeUpdated = false }
+
+        this.Activated = Activated
+        
         if (!this.LastActivated && this.Activated) { 
             this.Pressed = true
         } else if (this.Pressed) {

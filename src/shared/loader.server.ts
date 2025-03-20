@@ -37,9 +37,3 @@ if (LocalPlayer.Character) {
 
 LocalPlayer.CharacterAdded.Connect(CharacterAdded)
 LocalPlayer.CharacterRemoving.Connect(CharacterRemoving)
-
-RunService.BindToRenderStep("ControlScript_Update", Enum.RenderPriority.Input.Value - 1, (DeltaTime:number) => {
-    if (PlayerObject) {
-        PlayerObject.Update()
-    }
-})

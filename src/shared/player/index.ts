@@ -7,6 +7,7 @@ import { Input } from "./control/input"
 import { CharacterInfo } from "shared/characterinfo"
 import { UIMain } from "./ui"
 import { Animation } from "./draw/animation"
+import { FrameworkState } from "shared/common/frameworkstate"
 
 /**
  * Flags list
@@ -57,6 +58,9 @@ export class Player {
     public Position: Vector3
     public Speed: Vector3
     public Angle: CFrame
+    public LastCFrame: CFrame
+    public CurrentCFrame: CFrame
+    public RenderCFrame: CFrame
     
     // Flags
     public Flags:DefaultFlags
@@ -79,6 +83,10 @@ export class Player {
         this.Angle = Character.GetPivot().Rotation
         this.Speed = Vector3.zero
 
+        this.LastCFrame = this.Angle.add(this.Position)
+        this.CurrentCFrame = this.LastCFrame
+        this.RenderCFrame = this.CurrentCFrame
+
         this.Physics = CharacterInfo.Physics
         this.Animations = CharacterInfo.Animations
 
@@ -91,7 +99,7 @@ export class Player {
 
         this.Flags = new DefaultFlags()
 
-        Render.RegisterStepped("Player", Enum.RenderPriority.Input.Value + 1, () => this.Update())
+        Render.RegisterStepped("Player", Enum.RenderPriority.Input.Value + 1, (DeltaTime) => this.Update(DeltaTime))
         
         PreviousAngle = CFrame.identity
 
@@ -108,17 +116,27 @@ export class Player {
     /**
      * Update player once per frame, **do not run this method if you do not know what you're doing!**
      */
-    public Update() {
+    public Update(DeltaTime:number) {
         // Angle
         if (PreviousAngle !== this.Angle) {
             this.SetGroundRelative()
             PreviousAngle = this.Angle
         }
 
-        // Update state machine
-        this.State.Update()
+        if (FrameworkState.GameSpeed === 0) {
+            this.Input.PrepareReset()
+        }
 
-        this.Renderer.Draw()
+        this.Input.Update()
+
+        // Update state machine
+        this.State.Update(DeltaTime)
+
+        // Interpolate positions
+        this.RenderCFrame = this.LastCFrame.Lerp(this.Angle.add(this.Position), this.State.TickTimer)
+
+        this.Renderer.Draw(DeltaTime)
+        this.Camera.Update(DeltaTime)
     }
 
     // Utility functions

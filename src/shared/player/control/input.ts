@@ -56,13 +56,20 @@ export class Input {
         return List
     }
 
+    public GetInputState() {
+        const KeyboardState = UserInputService.GetKeysPressed()
+        const ControllerState = UserInputService.GetGamepadState(Enum.UserInputType.Gamepad1)
+        const MobileState:InputObject[] = [] // TODO: automatically create mobile buttons and match them to keycodes
+
+        return [KeyboardState, ControllerState, MobileState]
+    }
+
     /**
      * Update input
      */
     public Update() {
-        const KeyboardState = UserInputService.GetKeysPressed()
-        const ControllerState = UserInputService.GetGamepadState(Enum.UserInputType.Gamepad1)
-        const MobileState:InputObject[] = [] // TODO: automatically create mobile buttons and match them to keycodes
+        const _ = this.GetInputState()
+        const KeyboardState = _[0], ControllerState = _[1], MobileState = _[2]
 
         let KeyList:string[] = []
         const TotalState = [KeyboardState, ControllerState, MobileState]
@@ -100,7 +107,7 @@ export class Input {
         PCStickY -= UserInputService.IsKeyDown(Enum.KeyCode.W) && 1 || 0
         PCStickY -= UserInputService.IsKeyDown(Enum.KeyCode.S) && -1 || 0
 
-        ControllerState.forEach((Key) => {
+        ControllerState.forEach((Key) => {  
             if (Key.KeyCode === Enum.KeyCode.Thumbstick1) {
                 if (Key.Position.Magnitude <= .15) { return } // TODO: customizable deadzone
 
@@ -115,6 +122,12 @@ export class Input {
         // TODO: mobile stick
 
         // TODO: Update platform & controller context
+    }
+
+    public PrepareReset() {
+        for (const [_, Key] of pairs(this.Button)) {
+            Key.CanBeUpdated = true
+        }
     }
 
     /**
