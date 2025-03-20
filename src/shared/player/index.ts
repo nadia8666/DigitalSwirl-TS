@@ -102,7 +102,7 @@ export class Player {
      * Destroys the Player
      */
     public Destroy() {
-
+        
     }
 
     /**

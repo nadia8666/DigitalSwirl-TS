@@ -1,4 +1,3 @@
-import { FrameworkState } from "shared/common/frameworkstate";
 import { Player } from "..";
 import * as VUtil from "shared/common/vutil";
 import * as CFUtil from "shared/common/cfutil";
@@ -15,8 +14,6 @@ export const PhysicsHandler = {
      * @param Player 
      */
     AccelerateGrounded: (Player:Player) => {
-        const SpeedMultiplier = FrameworkState.SpeedMultiplier
-
         const MaxXSoeed = Player.Physics.MaxXSpeed
         const RunAcceleration = Player.Physics.RunAcceleration
         const Friction = /*self.flag.grounded and self.frict_mult*/ 1 || 1
@@ -141,7 +138,6 @@ export const PhysicsHandler = {
 
     // Gravity
     ApplyGravity: (Player:Player) => {
-        const SpeedMultiplier = FrameworkState.SpeedMultiplier
         const weight = Player.Physics.Weight
         
         //Get cross product between our moving velocity and floor normal
@@ -175,7 +171,7 @@ export const PhysicsHandler = {
             GravityAcceleration = new Vector3(0, -weight, 0)
         }
 
-        Player.Speed = Player.Speed.add(GravityAcceleration.mul(SpeedMultiplier))
+        Player.Speed = Player.Speed.add(GravityAcceleration)
     },
 
     // Movement
@@ -211,12 +207,11 @@ export const PhysicsHandler = {
      */
     Skid: (Player:Player) => {
         const FrictionMultiplier = 1 // TODO: fricton mult
-        const SpeedMultiplier = FrameworkState.SpeedMultiplier
 
         
         // TODO: see if sm is required here
-        const XFriction = Player.Physics.SkidFriction * FrictionMultiplier * SpeedMultiplier
-        const ZFriction = Player.Physics.GroundFriction.Z * FrictionMultiplier * SpeedMultiplier
+        const XFriction = Player.Physics.SkidFriction * FrictionMultiplier
+        const ZFriction = Player.Physics.GroundFriction.Z * FrictionMultiplier
         
         Player.Speed = Player.Speed.add(Player.Speed.mul(Player.Physics.AirResist)).add(new Vector3(PhysicsHandler.GetDecel(Player.Speed.X, XFriction), 0, PhysicsHandler.GetDecel(Player.Speed.Z, ZFriction)))
     },
@@ -272,8 +267,6 @@ export const PhysicsHandler = {
      * @param IState Inertia configs to match Digital Swirl
      */
     Turn: (Player:Player, Turn:number, IState:IntertiaState|undefined) => {
-        const SpeedMultiplier = FrameworkState.SpeedMultiplier
-
         let MaxTurn = math.abs(Turn)
         const HasControl = Player.Input.Get(Player)[0]
         const PreviousSpeed = Player.ToGlobal(Player.Speed)
@@ -305,7 +298,7 @@ export const PhysicsHandler = {
         MaxTurn = math.abs(MaxTurn)
 
         //Turn
-        PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn) * SpeedMultiplier)
+        PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn))
 
         if (IState === undefined) {
             if (Player.Flags.Grounded) {

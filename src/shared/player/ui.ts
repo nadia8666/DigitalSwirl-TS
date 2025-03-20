@@ -20,8 +20,8 @@ export class UIMain {
 
         this.Debugger = new _UI_Debugger()
 
-        this.Root.render(this.Debugger.Root)
-
+        //this.Root.render(this.Debugger.Root)
+        
         print("Rendering ui")
     }
 }

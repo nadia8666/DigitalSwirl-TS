@@ -1,6 +1,6 @@
 import * as Render from "shared/common/renderregistry"
 import { Player } from ".."
-import { Players, UserInputService } from "@rbxts/services"
+import { Players, UserInputService, Workspace } from "@rbxts/services"
 
 const MouseSensitivity = new Vector2(1, 0.77).mul(math.rad(0.5))
 const PitchMax = 85
@@ -80,7 +80,9 @@ export class Camera {
         // TODO: abstract & implement popper
         const FinalCFrame = new CFrame(this.Player.Position).mul(Rotation).add(new Vector3(0, this.Player.Character.FindFirstChildOfClass("Humanoid")?.HipHeight, 0)).add(Rotation.LookVector.mul(-this.Zoom))
 
-        game.Workspace.CurrentCamera.CFrame = FinalCFrame
+        if (!Workspace.CurrentCamera) { return }
+        Workspace.CurrentCamera.CFrame = FinalCFrame
+
         this.InputVector = FinalCFrame.LookVector
     }
 

@@ -1,7 +1,6 @@
 import { deepCopy as DeepCopy } from "@rbxts/deepcopy";
 import { Player } from "..";
 import { AnimationList, InferredAnimation } from "shared/characterinfo";
-
 /**
  * @class
  */

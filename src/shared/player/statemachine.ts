@@ -53,7 +53,7 @@ export class StateMachine {
         while (os.clock() > this.NextTick) {
             this.TickState()
 
-            this.NextTick += 1/Constants.Tickrate
+            this.NextTick += 1/(Constants.Tickrate)
         }
     };
 
