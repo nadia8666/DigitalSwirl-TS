@@ -3,6 +3,7 @@ import { GlobalReference } from "shared/common/globalreference";
 import * as VUtil from "shared/common/vutil"
 import * as CFUtil from "shared/common/cfutil"
 import { Constants } from "shared/common/constants";
+import { Workspace } from "@rbxts/services";
 
 const CollisionReference = new GlobalReference("Workspace/Level/Map/Collision")
 
@@ -51,7 +52,7 @@ function WallRay(Player:Player, Whitelist:Instance[], Y:number, Direction:Vector
 	//Raycast
 	const ReverseDirection = Direction.mul(Player.Physics.Radius * Player.Physics.Scale)
 	const From = Player.Position.add(Player.Angle.UpVector.mul(Y))
-	const ForwardDirection = Direction.mul(Player.Physics.Radius + Velocity).mul(Player.Physics.Scale)
+	const ForwardDirection = Direction.mul((Player.Physics.Radius + Velocity) * Player.Physics.Scale)
 	
 	const Result = Raycast(Whitelist, From, ForwardDirection)
 	const Hit = Result[0]
@@ -236,7 +237,6 @@ export function RunCollision(Player:Player) {
                 FloorDown += Player.Speed.Y * Player.Physics.Scale //Moving downwards, extend raycast downwards
             } else if (Player.Speed.Y > 0) {
                 FloorUp += Player.Speed.Y * Player.Physics.Scale //Moving upwards, move raycast upwards
-                FloorDown = Player.Speed.Y - .1
             }
 
             
