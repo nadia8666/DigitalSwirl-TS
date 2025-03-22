@@ -2,8 +2,8 @@ import { Player } from "shared/player"
 
 /**
  * Function ran in `State.CheckInput`
- * @param Player 
  * @move
+ * @param Player 
  * @returns Move successful
  */
 export function CheckBounce(Player:Player) {

@@ -5,6 +5,7 @@ import { CheckJump } from "./jump"
 
 /**
  * Function ran in `State.CheckInput`
+ * @move
  * @param Player 
  * @returns Move successful
  */
@@ -20,6 +21,7 @@ export function CheckSpindash(Player:Player) {
 
 /**
  * @class
+ * @state
  * @augments StateBase
  */
 export class StateSpindash extends StateBase {
@@ -57,6 +59,7 @@ export class StateSpindash extends StateBase {
 
 /**
  * @class
+ * @state
  * @augments StateBase
  */
 export class StateRoll extends StateBase {

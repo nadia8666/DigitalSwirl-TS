@@ -4,6 +4,7 @@ import { StateBase } from "../state/base"
 
 /**
  * Function ran in `State.CheckInput`
+ * @move
  * @param Player 
  * @returns Move successful
  */
@@ -23,6 +24,7 @@ export function CheckSkid(Player:Player) {
 
 /**
  * Function ran in `State.CheckInput`
+ * @move
  * @param Player 
  * @returns Move successful
  */
@@ -47,6 +49,7 @@ export function CheckStopSkid(Player:Player) {
 
 /**
  * @class
+ * @state
  * @augments StateBase
  */
 export class StateSkid extends StateBase {
