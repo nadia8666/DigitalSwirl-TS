@@ -12,9 +12,10 @@ Run `npm install` to install all dependencies in `package.json`, follow the [Roj
 `node_modules` and `include` were excluded to keep the project small and typescript only. `out` was excluded as compiling with [roblox-ts](https://roblox-ts.com/docs/usage) will automatically fill `out` and transpile to luau. If you want the [lua version of Digital Swirl, look here.](https://github.com/SonicOnset/DigitalSwirl-Client)
 
 ## JSDoc structure?
-This repo does not use the typical JSDoc system, and is instead meant to be used inside VSCode, where any arbitrary @s can be added to docs.
+This repo does not use the typical JSDoc system, rather uses VSCodes implementation of JSDoc , where any arbitrary @s can be added to docs.
 
 This is atypical @s:
-`@component` - Class which follows the component structure used to implement values into `Player`
-`@move` - Indicates a `CheckMove` function
-`@state` - Indicates an extended `State` class
+
+- `@component` - Class which follows the component structure used to implement values into `Player`
+- `@move` - Indicates a `CheckMove` function
+- `@state` - Indicates an extended `State` class
