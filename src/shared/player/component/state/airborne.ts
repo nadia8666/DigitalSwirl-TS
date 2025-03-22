@@ -1,8 +1,8 @@
-import { Player } from "..";
-import { CheckBounce } from "../moves/bounce";
-import { CheckHomingAttack } from "../moves/homingattack";
-import { PhysicsHandler } from "../physics/physics";
-import { StateBase } from "./base";
+import { Player } from "shared/player"
+import { PhysicsHandler } from "shared/player/physics/physics"
+import { CheckBounce } from "../interface/bounce"
+import { CheckHomingAttack } from "../interface/homing"
+import { StateBase } from "./base"
 
 /**
  * @class
@@ -23,7 +23,7 @@ export class StateAirborne extends StateBase {
         PhysicsHandler.AccelerateAirborne(Player)
         PhysicsHandler.AlignToGravity(Player)
 
-        if (Player.Flags.Grounded) {
+        if (Player.Ground.Grounded) {
             if (Player.Flags.IsBounce) {
                 Player.Flags.JumpTimer = 0
                 

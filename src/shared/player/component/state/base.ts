@@ -1,5 +1,5 @@
-import { Player } from "..";
-import { RunCollision } from "../physics/collision";
+import { Player } from "shared/player"
+import { RunCollision } from "shared/player/physics/collision"
 
 /**
  * State base type

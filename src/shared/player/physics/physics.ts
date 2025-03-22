@@ -27,7 +27,7 @@ export const PhysicsHandler = {
         //X air drag
         // TODO: see if i can improve
         if (HasControl) {
-            if (Player.Speed.X <= MaxXSoeed || Player.Flags.GroundRelative <= 0.96) {
+            if (Player.Speed.X <= MaxXSoeed || Player.Ground.DotProduct <= 0.96) {
                 if (Player.Speed.X > MaxXSoeed) {
                     Acceleration = Acceleration.add(new Vector3((Player.Speed.X - MaxXSoeed) * Player.Physics.AirResist.X, 0, 0))
                 } else if (Player.Speed.X < 0) {
@@ -54,7 +54,7 @@ export const PhysicsHandler = {
             //Get acceleration
             if (Player.Speed.X >= MaxXSoeed) {
                 //Use lower acceleration if above max speed
-                if (Player.Speed.X < MaxXSoeed || Player.Flags.GroundRelative >= 0) {
+                if (Player.Speed.X < MaxXSoeed || Player.Ground.DotProduct >= 0) {
                     MovementAcceleration = RunAcceleration * Magnitude * 0.4
                 } else {
                     MovementAcceleration = RunAcceleration * Magnitude
@@ -94,7 +94,7 @@ export const PhysicsHandler = {
             } else {
                 if (Player.Speed.X < (Player.Physics.JogSpeed + Player.Physics.RunSpeed) * 0.5 || AbsoluteTurn <= math.rad(22.5)) {
                     if (Player.Speed.X < Player.Physics.JogSpeed || AbsoluteTurn >= math.rad(22.5)) {
-                        if (Player.Speed.X < Player.Physics.DashSpeed || !Player.Flags.Grounded) {
+                        if (Player.Speed.X < Player.Physics.DashSpeed || !Player.Ground.Grounded) {
                             if (Player.Speed.X >= Player.Physics.JogSpeed && Player.Speed.X <= Player.Physics.RushSpeed && AbsoluteTurn > math.rad(45)) {
                                 MovementAcceleration *= 0.8
                             }
@@ -143,17 +143,17 @@ export const PhysicsHandler = {
         //Get cross product between our moving velocity and floor normal
         const FloorCrossSpeed = Player.Flags.LastUp.Cross(Player.ToGlobal(Player.Speed)) // TODO: replace with floor normal if needed
         let GravityAcceleration = Player.ToLocal(Player.Flags.Gravity.mul(weight))
-        if (Player.Flags.GroundRelative < 0.875) {
-            if (Player.Flags.GroundRelative >= 0.1 || math.abs(FloorCrossSpeed.Y) <= 0.6 || Player.Speed.X < 1.16) {
-                if (Player.Flags.GroundRelative >= -0.4 || Player.Speed.X <= 1.16) {
-                    if (Player.Flags.GroundRelative < -0.3 && Player.Speed.X > 1.16) {
+        if (Player.Ground.DotProduct < 0.875) {
+            if (Player.Ground.DotProduct >= 0.1 || math.abs(FloorCrossSpeed.Y) <= 0.6 || Player.Speed.X < 1.16) {
+                if (Player.Ground.DotProduct >= -0.4 || Player.Speed.X <= 1.16) {
+                    if (Player.Ground.DotProduct < -0.3 && Player.Speed.X > 1.16) {
                     
-                    } else if (Player.Flags.GroundRelative < -0.1 && Player.Speed.X > 1.16) {
+                    } else if (Player.Ground.DotProduct < -0.1 && Player.Speed.X > 1.16) {
 
-                    } else if (Player.Flags.GroundRelative < 0.5 && math.abs(Player.Speed.X) < Player.Physics.RunSpeed) {
+                    } else if (Player.Ground.DotProduct < 0.5 && math.abs(Player.Speed.X) < Player.Physics.RunSpeed) {
                         GravityAcceleration = GravityAcceleration.mul(new Vector3(4.225, 1, 4.225))
-                    } else if (Player.Flags.GroundRelative >= 0.7 || math.abs(Player.Speed.X) > Player.Physics.RunSpeed) {
-                        if (Player.Flags.GroundRelative >= 0.87 || Player.Physics.JogSpeed <= math.abs(Player.Speed.X)) {
+                    } else if (Player.Ground.DotProduct >= 0.7 || math.abs(Player.Speed.X) > Player.Physics.RunSpeed) {
+                        if (Player.Ground.DotProduct >= 0.87 || Player.Physics.JogSpeed <= math.abs(Player.Speed.X)) {
                             
                         } else {
                             GravityAcceleration = GravityAcceleration.mul(new Vector3(1, 1, 1.4))
@@ -225,12 +225,12 @@ export const PhysicsHandler = {
         const Weight = Player.Physics.Weight
         let Acceleration = Player.ToLocal(Player.Flags.Gravity.mul(Weight))
 
-        if (Player.Flags.Grounded && Player.Speed.X > Player.Physics.RunSpeed && Player.Flags.GroundRelative < 0) {
+        if (Player.Ground.Grounded && Player.Speed.X > Player.Physics.RunSpeed && Player.Ground.DotProduct < 0) {
             // TODO: make dynamic
             Acceleration = Acceleration.mul(new Vector3(1, -8, 1))
         }
 
-        if (Player.Flags.BallEnabled && Player.Flags.GroundRelative < .98) {
+        if (Player.Flags.BallEnabled && Player.Ground.DotProduct < .98) {
             Acceleration = Acceleration.add(new Vector3(Player.Speed.X * -.0002, 0, 0))
         } else {
             Acceleration = Acceleration.add(new Vector3(Player.Speed.X * Player.Physics.AirResist.X, 0, 0))
@@ -301,13 +301,13 @@ export const PhysicsHandler = {
         PhysicsHandler.TurnRaw(Player, math.clamp(Turn, -MaxTurn, MaxTurn))
 
         if (IState === undefined) {
-            if (Player.Flags.Grounded) {
+            if (Player.Ground.Grounded) {
                 Player.Speed = Player.Speed.mul(.1).add(Player.ToLocal(PreviousSpeed).mul(.9))
             } else {
                 let Inertia
 
                 if (HasControl) {
-                    if (Player.Flags.GroundRelative <= .4) {
+                    if (Player.Ground.DotProduct <= .4) {
                         Inertia = .5
                     } else {
                         Inertia = .01
@@ -328,7 +328,7 @@ export const PhysicsHandler = {
             Player.Speed = Player.ToLocal(PreviousSpeed)
         } else if (IState === IntertiaState.GROUND_NOFRICT) {
             let Inertia
-            if (Player.Flags.GroundRelative <= .4) {
+            if (Player.Ground.DotProduct <= .4) {
                 Inertia = .5
             } else {
                 Inertia = .01

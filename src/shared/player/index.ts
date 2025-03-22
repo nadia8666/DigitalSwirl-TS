@@ -8,24 +8,14 @@ import { CharacterInfo } from "shared/characterinfo"
 import { UIMain } from "./ui"
 import { Animation } from "./draw/animation"
 import { FrameworkState } from "shared/common/frameworkstate"
+import { Ground } from "./component/interface/ground"
 
 /**
  * Flags list
  * @class
  */
 export class DefaultFlags {
-    public Grounded = false
     public LastUp = Vector3.yAxis
-    
-    public Floor:BasePart|undefined = undefined
-    public FloorLast:CFrame|undefined = undefined
-    public FloorOffset:CFrame|undefined = undefined
-    public FloorSpeed = new Vector3(0, 0, 0)
-
-    /**
-     * Dot product between `Player.Angle` and `Player.Flags.Gravity`
-     */
-    public GroundRelative = -1
 
     /**
      * Does not control the `JumpBall` or `Roll`, view `Player.EnterBall` for more info
@@ -76,6 +66,9 @@ export class Player {
     public readonly Renderer: Renderer
     public readonly Input: Input
     public readonly UI: UIMain
+    
+    // Components
+    public Ground: Ground
 
     constructor(Character: Model) {
         this.Character = Character
@@ -96,6 +89,8 @@ export class Player {
         this.Renderer = new Renderer(this)
         this.Input = new Input()
         this.UI = new UIMain()
+
+        this.Ground = new Ground()
 
         this.Flags = new DefaultFlags()
 
@@ -182,10 +177,10 @@ export class Player {
      * !! THIS METHOD IS AUTOMATICALLY RAN ON PLAYER.ANGLE CHANGE !!
      * 
      * 
-     * Updates Player.Flags.GroundRelative (Dot product of Player.Angle and Player.Flags.Gravity)
+     * Updates Player.Ground.DotProduct (Dot product of Player.Angle and Player.Flags.Gravity)
      */
     public SetGroundRelative() {
-        this.Flags.GroundRelative = this.Angle.UpVector.mul(-1).Dot(this.Flags.Gravity.Unit)
+        this.Ground.DotProduct = this.Angle.UpVector.mul(-1).Dot(this.Flags.Gravity.Unit)
     }
 
     /**

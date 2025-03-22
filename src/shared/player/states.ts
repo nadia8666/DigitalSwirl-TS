@@ -1,10 +1,9 @@
-import { StateAirborne } from "./airborne";
-import { StateGrounded } from "./grounded";
-import { StateBase } from "./base";
-import { StateSpindash } from "./spindash";
-import { StateRoll } from "./roll";
-import { StateNone } from "./none";
-import { StateSkid } from "./skid";
+import { StateSkid } from "./component/interface/skid"
+import { StateSpindash, StateRoll } from "./component/interface/spindash"
+import { StateAirborne } from "./component/state/airborne"
+import { StateBase } from "./component/state/base"
+import { StateGrounded } from "./component/state/grounded"
+import { StateNone } from "./component/state/none"
 
 export type PlayerState = StateBase
 

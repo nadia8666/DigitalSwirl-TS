@@ -1,5 +1,5 @@
-import { Player } from "..";
-import { StateBase } from "./base";
+import { Player } from "shared/player"
+import { StateBase } from "./base"
 
 /**
  * State which does not apply any collision or physics objects

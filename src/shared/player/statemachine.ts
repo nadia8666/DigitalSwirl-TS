@@ -2,7 +2,7 @@ import { Constants } from "shared/common/constants"
 import { Player } from "."
 
 import { AddLog } from "shared/common/logger"
-import { PlayerState, StateList } from "./states/states"
+import { PlayerState, StateList } from "./states"
 import { FrameworkState } from "shared/common/frameworkstate"
 
 export type StatesUnion = ExtractKeys<StateList, PlayerState>

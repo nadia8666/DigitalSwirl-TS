@@ -1,4 +1,6 @@
-import { Player } from "..";
+import { Player } from "shared/player"
+import { PhysicsHandler } from "shared/player/physics/physics"
+import { StateBase } from "../state/base"
 
 /**
  * Function ran in `State.CheckInput`
@@ -42,3 +44,23 @@ export function CheckStopSkid(Player:Player) {
         return StopSkid
     }
 }
+
+/**
+ * @class
+ * @augments StateBase
+ */
+export class StateSkid extends StateBase {
+    constructor() {
+        super()
+    }
+
+    protected CheckInput(Player:Player) {
+        return CheckStopSkid(Player)
+    }
+
+    protected AfterUpdateHook(Player:Player) {
+        PhysicsHandler.ApplyGravity(Player)
+        PhysicsHandler.Skid(Player)
+    }
+}
+

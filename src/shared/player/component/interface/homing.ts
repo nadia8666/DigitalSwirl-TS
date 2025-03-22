@@ -1,4 +1,4 @@
-import { Player } from "..";
+import { Player } from "shared/player"
 
 /**
  * Function ran in `State.CheckInput`

@@ -1,9 +1,9 @@
-import { Player } from "..";
-import { CheckJump } from "../moves/jump";
-import { CheckSkid } from "../moves/skid";
-import { CheckSpindash } from "../moves/spindash";
-import { IntertiaState, PhysicsHandler } from "../physics/physics";
-import { StateBase } from "./base";
+import { Player } from "shared/player"
+import { PhysicsHandler } from "shared/player/physics/physics"
+import { CheckJump } from "../interface/jump"
+import { CheckSkid } from "../interface/skid"
+import { CheckSpindash } from "../interface/spindash"
+import { StateBase } from "./base"
 
 /**
  * @class
@@ -23,7 +23,7 @@ export class StateGrounded extends StateBase {
         //PhysicsHandler.Turn(Player, Player.Input.GetTurn(Player), undefined)
         PhysicsHandler.AccelerateGrounded(Player)
 
-        if (Player.Flags.Grounded) {
+        if (Player.Ground.Grounded) {
             Player.Animation.Current = Player.Speed.X > 0 && "Run" || "Idle"
         } else {
             Player.Animation.Current = "Fall"
