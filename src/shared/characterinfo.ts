@@ -74,9 +74,9 @@ export let CharacterInfo = {
 				pos: 4
 			}, 
 			[2]: {
-				id: "73079985595263",
+				id: "134508562899840",
 				asset: BaseAnimation,
-				pos: 6.5
+				pos: 6
 			},
 			spd_b: [.2, .2, .3],  // base speed
 			spd_i: [.3, .3, .4], // speed incremental
