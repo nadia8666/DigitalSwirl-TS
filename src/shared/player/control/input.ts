@@ -61,15 +61,14 @@ export class Input {
         const ControllerState = UserInputService.GetGamepadState(Enum.UserInputType.Gamepad1)
         const MobileState:InputObject[] = [] // TODO: automatically create mobile buttons and match them to keycodes
 
-        return [KeyboardState, ControllerState, MobileState]
+        return $tuple(KeyboardState, ControllerState, MobileState)
     }
 
     /**
      * Update input
      */
     public Update() {
-        const _ = this.GetInputState()
-        const KeyboardState = _[0], ControllerState = _[1], MobileState = _[2]
+        const [KeyboardState, ControllerState, MobileState] = this.GetInputState()
 
         let KeyList:string[] = []
         const TotalState = [KeyboardState, ControllerState, MobileState]
@@ -144,7 +143,7 @@ export class Input {
 		const up = Player.Angle.UpVector
 		
 		//Get camera angle, aligned to our target up vector
-		let cam_look = VUtil.PlaneProject(game.Workspace.CurrentCamera.CFrame.LookVector, tgt_up)[0]
+		let [cam_look] = VUtil.PlaneProject(game.Workspace.CurrentCamera.CFrame.LookVector, tgt_up)
 		if (cam_look.Magnitude !== 0) {
             cam_look = cam_look.Unit  
         } else {
@@ -161,7 +160,7 @@ export class Input {
 		//Get final rotation and move vector
 		const final_rotation = CFUtil.FromToRotation(tgt_up, Player.Flags.LastUp)
 		
-		let final_move = VUtil.PlaneProject(final_rotation.mul(cam_move), up)[0]
+		let [final_move] = VUtil.PlaneProject(final_rotation.mul(cam_move), up)
 		if (final_move.Magnitude !== 0) {
 			final_move = final_move.Unit
 		} else {

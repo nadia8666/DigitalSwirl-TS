@@ -21,8 +21,7 @@ export const PhysicsHandler = {
         //Get analogue state
         let Acceleration = new Vector3(0,0,0)
         let MovementAcceleration = 0
-        let _ = Player.Input.Get(Player)
-        const HasControl = _[0], Turn = _[1], Magnitude = _[2] // TODO: implement this for all $tuples
+        let [HasControl, Turn, Magnitude] = Player.Input.Get(Player)
         
         //X air drag
         // TODO: see if i can improve
@@ -268,7 +267,7 @@ export const PhysicsHandler = {
      */
     Turn: (Player:Player, Turn:number, IState:IntertiaState|undefined) => {
         let MaxTurn = math.abs(Turn)
-        const HasControl = Player.Input.Get(Player)[0]
+        const [HasControl] = Player.Input.Get(Player)
         const PreviousSpeed = Player.ToGlobal(Player.Speed)
 
         /*

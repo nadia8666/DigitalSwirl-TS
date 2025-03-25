@@ -9,8 +9,7 @@ import { StateBase } from "../state/base"
  * @returns Move successful
  */
 export function CheckSkid(Player:Player) {
-    const _ = Player.Input.Get(Player)
-    const HasControl = _[0], Turn = _[1]
+    const [HasControl, Turn] = Player.Input.Get(Player)
 
     const Skid = HasControl && (math.abs(Turn) > math.rad(135)) || false
 
@@ -35,8 +34,7 @@ export function CheckStopSkid(Player:Player) {
         
         return true
     } else {
-        const _ = Player.Input.Get(Player)
-        const HasControl = _[0], Turn = _[1]
+        const [HasControl, Turn] = Player.Input.Get(Player)
         const StopSkid = HasControl && (math.abs(Turn) <= math.rad(135)) || false
 
         if (StopSkid) {

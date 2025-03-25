@@ -54,10 +54,7 @@ function WallRay(Player:Player, Whitelist:Instance[], Y:number, Direction:Vector
 	const From = Player.Position.add(Player.Angle.UpVector.mul(Y))
 	const ForwardDirection = Direction.mul((Player.Physics.Radius + Velocity) * Player.Physics.Scale)
 	
-	const Result = Raycast(Whitelist, From, ForwardDirection)
-	const Hit = Result[0]
-    const Position = Result[1]
-    const Normal = Result[2]
+	const [Hit, Position, Normal] = Raycast(Whitelist, From, ForwardDirection)
 
 	if (Hit) {
         return $tuple((Position?.sub(ReverseDirection))?.sub(From), Normal, Position)
@@ -76,10 +73,7 @@ function CheckWallAttach(Player:Player, Direction:Vector3, Normal:Vector3) {
 function WallAttach(Player:Player, Whitelist:Instance[], InputNormal:Vector3) {
 	const FUp = Player.Physics.Height * Player.Physics.Scale
 	const FDown = FUp + (Player.Physics.PositionError * Player.Physics.Scale)
-	const Result = Raycast(Whitelist, Player.Position.add(Player.Angle.UpVector.mul(FUp)), InputNormal.mul(-FDown))
-	const Hit = Result[0]
-    const Normal = Result[1]
-    const Position = Result[2]
+	const [Hit, Position, Normal] = Raycast(Whitelist, Player.Position.add(Player.Angle.UpVector.mul(FUp)), InputNormal.mul(-FDown))
 
     if (Hit && Position) {
         Player.Position = Position
@@ -93,14 +87,8 @@ function WallHit(Player:Player, Normal:Vector3) {
 
 function WallCollide(Player:Player, Whitelist:Instance[], Y:number, Direction:Vector3, Velocity:number, ForwardAttach:boolean, BackAttach:boolean) {
 	//Positive and negative wall collision
-    const Result1 = WallRay(Player, Whitelist, Y, Direction, math.max(Velocity, 0))
-    const Result2 = WallRay(Player, Whitelist, Y, Direction.mul(-1), math.max(-Velocity, 0))
-    
-    let ForwardPos = Result1[0]
-    let ForwardNormal = Result1[1]
-
-    let BackwardPos = Result2[0]
-    let BackwardNormal = Result2[1]
+    let [ForwardPos, ForwardNormal] = WallRay(Player, Whitelist, Y, Direction, math.max(Velocity, 0))
+    let [BackwardPos, BackwardNormal] = WallRay(Player, Whitelist, Y, Direction.mul(-1), math.max(-Velocity, 0))
 	
 	//Clip with walls
 	let ShouldMove = true
@@ -209,10 +197,7 @@ export function RunCollision(Player:Player) {
             
             const From = Player.Position.add(Player.Angle.UpVector.mul(CeilUp))
             const Direction = Player.Angle.UpVector.mul(CeilDown)
-            const Result = Raycast(CollisionWhitelist, From, Direction)
-            const Hit = Result[0]
-            const Position = Result[1]
-            const Normal = Result[2]
+            const [Hit, Position, Normal] = Raycast(CollisionWhitelist, From, Direction)
             
             if (Hit && Position && Normal) {
                 if (Player.Ground.Grounded) {
@@ -242,9 +227,8 @@ export function RunCollision(Player:Player) {
             
             const From = Player.Position.add(Player.Angle.UpVector.mul(FloorUp))
             const Direction = Player.Angle.UpVector.mul(FloorDown)
-            const _ = Raycast(CollisionWhitelist, From, Direction)
-            let Hit = _[0], Position = _[1], Normal = _[2]
-            
+            let [Hit, Position, Normal] = Raycast(CollisionWhitelist, From, Direction)
+
             //Do additional collision checks
             if (Hit && Position && Normal) {
                 let DropOff = false
@@ -317,10 +301,7 @@ export function RunCollision(Player:Player) {
             if (NewMiddle !== PreviousMiddle) {
                 const NewAdd = NewMiddle.sub(PreviousMiddle).Unit.mul((Player.Physics.Radius * Player.Physics.Scale))
                 const NewEnd = NewMiddle// + new_add
-                const Result = Raycast(CollisionWhitelist, PreviousMiddle, NewEnd.sub(PreviousMiddle))
-                const Hit = Result[0]
-                const Position = Result[1]
-                const Normal = Result[2]
+                const [Hit, Position, Normal] = Raycast(CollisionWhitelist, PreviousMiddle, NewEnd.sub(PreviousMiddle))
                 if (Hit && Position && Normal) {
                     //Clip us out
                     print("clip")
