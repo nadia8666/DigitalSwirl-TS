@@ -82,6 +82,7 @@ export class Camera {
 
         if (!Workspace.CurrentCamera) { return }
         Workspace.CurrentCamera.CFrame = FinalCFrame
+        Workspace.CurrentCamera.Focus = FinalCFrame
 
         this.InputVector = FinalCFrame.LookVector
     }
