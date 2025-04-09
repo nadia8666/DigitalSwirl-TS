@@ -18,8 +18,8 @@ function ListContainer(Properties: ComponentProperties<Frame> & { Text: string |
 
     useEffect(() => {
         const Info = {
-            time: .2,
-            styl: Enum.EasingStyle.Cubic,
+            time: .25,
+            style: Enum.EasingStyle.Cubic,
             direction: Enum.EasingDirection.Out,
         }
         SetSize.tween(DropdownExecuted && 500 || 35, Info)
